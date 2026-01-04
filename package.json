@@ -1,0 +1,25 @@
+{
+  "name": "file-uploader",
+  "version": "1.0.0",
+  "description": "Full-stack file storage web app",
+  "main": "index.js",
+  "scripts": {
+    "install:backend": "cd backend && npm install",
+    "install:frontend": "cd frontend && npm install",
+    "build:frontend": "cd frontend && npm run build",
+    "build": "npm run install:backend && npm run install:frontend && npm run build:frontend",
+    "start": "cd backend && npm start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Abdirazakf/file-uploader.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Abdirazakf/file-uploader/issues"
+  },
+  "homepage": "https://github.com/Abdirazakf/file-uploader#readme"
+}
