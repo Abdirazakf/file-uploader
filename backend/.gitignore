@@ -4,6 +4,7 @@
 /dist
 /tmp
 /out-tsc
+/db/generated/prisma
 
 # Runtime data
 pids
@@ -89,3 +90,4 @@ lerna-debug.log
 # System Files
 .DS_Store
 Thumbs.db
+/generated/prisma
