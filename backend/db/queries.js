@@ -1,7 +1,16 @@
+const prisma = require('./lib/prisma')
+
 async function getUserByID (id){
     const user = await prisma.user.findUnique({
         where: {
             id: id
+        },
+        select: {
+            id: true,
+            email: true,
+            name: true,
+            createdAt: true,
+            updatedAt: true
         }
     })
 
