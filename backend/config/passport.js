@@ -5,10 +5,10 @@ const bcrypt = require('bcryptjs')
 
 passport.use(
     new LocalStrategy(
-        {usernameField: 'username', passwordField: 'password'},
-        async (username, password, done) => {
+        {usernameField: 'email', passwordField: 'password'},
+        async (email, password, done) => {
             try {
-                const user = await db.getUser(username)
+                const user = await db.getUser(email)
 
                 if (!user){
                     return done(null, false, {message: 'The email address or password you entered is incorrect'})

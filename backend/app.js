@@ -3,6 +3,7 @@ const express = require("express")
 const session = require("express-session")
 const { PrismaSessionStore } = require('@quixo3/prisma-session-store')
 const prisma = require("./db/lib/prisma.js")
+const passport = require('./config/passport.js')
 const cors = require('cors')
 
 const app = express()
@@ -44,6 +45,9 @@ app.use(
         },
     })
 )
+
+app.use(passport.initialize())
+app.use(passport.session())
 
 app.listen(port, (err) => {
     if (err){
