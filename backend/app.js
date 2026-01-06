@@ -55,7 +55,7 @@ app.use(passport.session())
 
 app.use('/api/sign-up', signupRouter)
 app.use('/api/login', loginRouter)
-app.user('/api/auth', authRouter)
+app.use('/api/auth', authRouter)
 
 app.use((err, req, res, next) => {
     console.error('Server Error:', err)
