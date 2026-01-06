@@ -28,7 +28,7 @@ async function getUserByID (id){
 }
 
 async function checkEmail (email){
-    const existingUser = await prisma.user.findMany({
+    const existingUser = await prisma.user.findUnique({
         where: {
             email: email
         }
