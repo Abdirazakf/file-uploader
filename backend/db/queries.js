@@ -1,5 +1,15 @@
 const prisma = require('./lib/prisma')
 
+async function getUser (email){
+    const user = await prisma.user.findUnique({
+        where: {
+            email: email
+        }
+    })
+
+    return user
+}
+
 async function getUserByID (id){
     const user = await prisma.user.findUnique({
         where: {
@@ -17,17 +27,31 @@ async function getUserByID (id){
     return user
 }
 
-async function getUser (email){
-    const user = await prisma.user.findUnique({
+async function checkEmail (email){
+    const existingUser = await prisma.user.findMany({
         where: {
             email: email
         }
     })
 
-    return user
+    return existingUser
+}
+
+async function createUser (email, password, name){
+    const newUser = await prisma.user.create({
+        data: {
+            email: email,
+            password: password,
+            name: name
+        }
+    })
+
+    return newUser
 }
 
 module.exports = {
     getUser,
-    getUserByID
+    getUserByID,
+    checkEmail,
+    createUser
 }
