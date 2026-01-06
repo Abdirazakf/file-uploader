@@ -7,6 +7,7 @@ const prisma = require("./db/lib/prisma.js")
 const passport = require('./config/passport.js')
 
 const signupRouter = require('./routes/signupRouter.js')
+const loginRouter = require('./routes/loginRouter')
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -52,6 +53,7 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 app.use('/api/sign-up', signupRouter)
+app.use('/api/login', loginRouter)
 
 app.use((err, req, res, next) => {
     console.error('Server Error:', err)
