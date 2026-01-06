@@ -1,10 +1,12 @@
 require('dotenv').config()
 const express = require("express")
 const session = require("express-session")
+const cors = require('cors')
 const { PrismaSessionStore } = require('@quixo3/prisma-session-store')
 const prisma = require("./db/lib/prisma.js")
 const passport = require('./config/passport.js')
-const cors = require('cors')
+
+const signupRouter = require('./routes/signupRouter.js')
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -48,6 +50,15 @@ app.use(
 
 app.use(passport.initialize())
 app.use(passport.session())
+
+app.use('/api/sign-up', signupRouter)
+
+app.use((err, req, res, next) => {
+    console.error('Server Error:', err)
+    res.status(500).json({
+        errors: [{msg: "Something went wrong on the server"}]
+    })
+})
 
 app.listen(port, (err) => {
     if (err){
