@@ -18,6 +18,8 @@ model User {
   folders  Folder[]
   files    File[]
   sessions Session[]
+
+  @@map("users")
 }
 
 model Session {
@@ -28,6 +30,8 @@ model Session {
 
   userId String?
   user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
 }
 
 model Folder {
@@ -47,6 +51,7 @@ model Folder {
 
   @@index([userId])
   @@index([parentId])
+  @@map("folders")
 }
 
 model File {
@@ -67,4 +72,5 @@ model File {
 
   @@index([userId])
   @@index([folderId])
+  @@map("files")
 }
