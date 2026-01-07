@@ -1,5 +1,7 @@
+import Navbar from "../components/Navbar"
+
 export default function GuestHome(){
     return (
-        <h1>Guest Homepage</h1>
+        <Navbar />
     )
 }
