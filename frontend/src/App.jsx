@@ -1,13 +1,23 @@
-function App() {
+import { useEffect } from 'react'
+import {useAuthStore} from './states/useAuthStore'
+import {Routes, Route} from 'react-router-dom'
+import { Toaster } from 'react-hot-toast'
+import Homepage from './pages/Homepage'
+
+export default function App(){
+  const checkAuth = useAuthStore((state) => state.checkAuth)
+
+  useEffect(() => {
+    checkAuth()
+  }, [checkAuth])
+
   return (
-    <div class="mx-auto flex max-w-sm items-center gap-x-4 rounded-xl bg-white p-6 shadow-lg outline outline-black/5 dark:bg-slate-800 dark:shadow-none dark:-outline-offset-1 dark:outline-white/10">
-      <img class="size-12 shrink-0" src="/img/logo.svg" alt="ChitChat Logo" />
-      <div>
-        <div class="text-xl font-medium text-black dark:text-white">ChitChat</div>
-        <p class="text-gray-500 dark:text-gray-400">You have a new message!</p>
-      </div>
+    <div className="min-h-screen bg-background text-zinc-400 font-sans antialiased h-screen w-screen overflow-hidden selection:bg-white/10">
+      <Routes>
+        <Route path='/' element={<Homepage/>} />
+      </Routes>
+
+      <Toaster />
     </div>
   )
 }
-
-export default App
