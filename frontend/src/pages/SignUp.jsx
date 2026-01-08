@@ -61,8 +61,8 @@ export default function SignUp(){
 
             <div className="w-full max-w-87.5 mx-auto p-6 z-10 animate-enter">
                 <div className="flex flex-col items-center text-center mb-8">
-                    <div className="w-10 h-10 bg-zinc-900 border border-zinc-800 rounded-lg flex items-center justify-center mb-4 shadow-sm">
-                        <UserPlus className="text-zinc-100"/>
+                    <div className="w-10 h-10 bg-zinc-900 border border-zinc-800 rounded-lg flex items-center justify-center shadow-sm">
+                        <UserPlus className="w-5 h-5 text-zinc-100"/>
                     </div>
                     <h1 className="text-xl font-semibold text-zinc-100 tracking-tight mb-1">Create an account</h1>
                     <p className="text-sm text-zinc-500">Start your free trial today. No credit card required.</p>
