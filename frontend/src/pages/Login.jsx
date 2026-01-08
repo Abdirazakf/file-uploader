@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAuthStore } from "../states/useAuthStore";
 import { useNavigate } from "react-router";
 import { Link } from "react-router";
+import { ThreeDot } from "react-loading-indicators";
 import { CircleArrowLeft, Box, EyeOff, Eye } from "lucide-react";
 import toast from 'react-hot-toast'
 
@@ -23,7 +24,7 @@ export default function Login(){
         }
 
         try {
-            const response = await fetch('/api/login', {
+            const response = await fetch('http://localhost:3000/api/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
