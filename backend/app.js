@@ -5,6 +5,7 @@ const cors = require('cors')
 const { PrismaSessionStore } = require('@quixo3/prisma-session-store')
 const prisma = require("./db/lib/prisma.js")
 const passport = require('./config/passport.js')
+const path = require('path')
 
 const signupRouter = require('./routes/signupRouter.js')
 const loginRouter = require('./routes/loginRouter.js')
