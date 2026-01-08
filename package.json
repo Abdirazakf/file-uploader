@@ -6,8 +6,9 @@
   "scripts": {
     "install:backend": "cd backend && npm install",
     "install:frontend": "cd frontend && npm install",
+    "build:backend": "cd backend && npx prisma generate --schema=./db/prisma/schema.prisma && npx prisma migrate deploy --schema=./db/prisma/schema.prisma",
     "build:frontend": "cd frontend && npm run build",
-    "build": "npm run install:backend && npm run install:frontend && npm run build:frontend",
+    "build": "npm run install:backend && npm run install:frontend && npm run build:backend && npm run build:frontend",
     "start": "cd backend && npm start"
   },
   "repository": {
