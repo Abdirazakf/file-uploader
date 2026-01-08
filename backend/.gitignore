@@ -5,6 +5,7 @@
 /tmp
 /out-tsc
 /db/generated/prisma
+node_modules/.prisma/
 
 # Runtime data
 pids
