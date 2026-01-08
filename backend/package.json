@@ -5,9 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "dev": "node --watch app.js",
-    "build": "prisma generate --schema=./db/prisma/schema.prisma && prisma migrate deploy --schema=./db/prisma/schema.prisma",
-    "postinstall": "prisma generate --schema=./db/prisma/schema.prisma"
+    "dev": "node --watch app.js"
   },
   "keywords": [],
   "author": "",
