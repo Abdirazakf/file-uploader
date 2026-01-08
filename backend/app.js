@@ -57,6 +57,14 @@ app.use('/api/sign-up', signupRouter)
 app.use('/api/login', loginRouter)
 app.use('/api/auth', authRouter)
 
+if (process.env.NODE_ENV === 'prod'){
+    app.use(express.static(path.join(__dirname, '../frontend/dist')))
+
+    app.use((req, res) => {
+        res.sendFile(path.join(__dirname, '../frontend/dist/index.html'))
+    })
+}
+
 app.use((err, req, res, next) => {
     console.error('Server Error:', err)
     res.status(500).json({
