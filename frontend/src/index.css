@@ -1,1 +1,107 @@
 @import "tailwindcss";
+
+@theme {
+    --font-sans: 'Inter', system-ui, sans-serif;
+    
+    --color-background: #09090b;
+    --color-surface: #121214;
+    --color-border: #27272a;
+    --color-accent: #3b82f6;
+    
+    --animate-fade-in: fadeIn 0.5s ease-out forwards;
+    --animate-enter: enter 0.3s ease-out forwards;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { 
+    width: 6px; 
+    height: 6px; 
+}
+
+::-webkit-scrollbar-track { 
+    background: transparent; 
+}
+
+::-webkit-scrollbar-thumb { 
+    background: #3f3f46; 
+    border-radius: 3px; 
+}
+
+::-webkit-scrollbar-thumb:hover { 
+    background: #52525b; 
+}
+
+/* Selection */
+::selection { 
+    background: rgba(59, 130, 246, 0.2); 
+    color: #60a5fa; 
+}
+
+/* Grid Background */
+.bg-grid { 
+    background-size: 40px 40px; 
+    background-image: 
+        linear-gradient(to right, #27272a 1px, transparent 1px), 
+        linear-gradient(to bottom, #27272a 1px, transparent 1px); 
+    mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent); 
+}
+
+/* Animation Utilities */
+.animate-enter { 
+    animation: enter 0.3s ease-out forwards; 
+}
+
+@keyframes enter { 
+    from { 
+        opacity: 0; 
+        transform: translateY(10px); 
+    } 
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    } 
+}
+
+/* Fade In Animation */
+@keyframes fadeIn {
+    0% { 
+        opacity: 0; 
+        transform: translateY(10px); 
+    }
+    100% { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Glass Effect */
+.glass { 
+    background: rgba(9, 9, 11, 0.7); 
+    backdrop-filter: blur(12px); 
+    -webkit-backdrop-filter: blur(12px); 
+}
+
+/* Custom Background Color */
+.bg-background {
+    background-color: #09090b;
+}
+
+.bg-surface {
+    background-color: #121214;
+}
+
+.border-border {
+    border-color: #27272a;
+}
+
+.text-accent {
+    color: #3b82f6;
+}
+
+.bg-accent {
+    background-color: #3b82f6;
+}
