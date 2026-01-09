@@ -13,6 +13,8 @@ const authRouter = require('./routes/authRouter.js')
 const uploadRouter = require('./routes/uploadRouter.js')
 const folderRouter = require('./routes/folderRouter.js')
 
+const { isAuthenticated } = require('./middleware/authMiddleware.js')
+
 const app = express()
 const port = process.env.PORT || 3000
 
@@ -60,7 +62,7 @@ app.use('/api/sign-up', signupRouter)
 app.use('/api/login', loginRouter)
 app.use('/api/auth', authRouter)
 app.use('/api/upload', uploadRouter)
-app.use('/api/folders', folderRouter)
+app.use('/api/folders', isAuthenticated, folderRouter)
 
 if (process.env.NODE_ENV === 'prod'){
     app.use(express.static(path.join(__dirname, '../frontend/dist')))
