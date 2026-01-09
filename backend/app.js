@@ -10,6 +10,7 @@ const path = require('path')
 const signupRouter = require('./routes/signupRouter.js')
 const loginRouter = require('./routes/loginRouter.js')
 const authRouter = require('./routes/authRouter.js')
+const uploadRouter = require('./routes/uploadRouter.js')
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -57,6 +58,7 @@ app.use(passport.session())
 app.use('/api/sign-up', signupRouter)
 app.use('/api/login', loginRouter)
 app.use('/api/auth', authRouter)
+app.use('/api/upload', uploadRouter)
 
 if (process.env.NODE_ENV === 'prod'){
     app.use(express.static(path.join(__dirname, '../frontend/dist')))
