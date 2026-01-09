@@ -11,6 +11,7 @@ const signupRouter = require('./routes/signupRouter.js')
 const loginRouter = require('./routes/loginRouter.js')
 const authRouter = require('./routes/authRouter.js')
 const uploadRouter = require('./routes/uploadRouter.js')
+const folderRouter = require('./routes/folderRouter.js')
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -59,6 +60,7 @@ app.use('/api/sign-up', signupRouter)
 app.use('/api/login', loginRouter)
 app.use('/api/auth', authRouter)
 app.use('/api/upload', uploadRouter)
+app.use('/api/folders', folderRouter)
 
 if (process.env.NODE_ENV === 'prod'){
     app.use(express.static(path.join(__dirname, '../frontend/dist')))
