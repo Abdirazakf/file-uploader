@@ -1,8 +1,8 @@
 const {Router} = require('express')
 const authRouter = Router()
-const authController = require('../controllers/authController')
+const {checkAuth, logout} = require('../controllers/authController')
 
-authRouter.get('/status', authController.checkAuth)
-authRouter.post('/logout', authController.logout)
+authRouter.get('/status', checkAuth)
+authRouter.post('/logout', logout)
 
 module.exports = authRouter
