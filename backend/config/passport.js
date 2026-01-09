@@ -1,4 +1,4 @@
-const db = require('../db/queries')
+const db = require('../db/userQueries')
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 const bcrypt = require('bcryptjs')
