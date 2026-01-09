@@ -5,7 +5,8 @@ const {
         getFolderByID,
         createFolderPost,
         updateFolderPut,
-        deleteFolder} = require('../controllers/folderController')
+        deleteFolder
+    } = require('../controllers/folderController')
 
 folderRouter.get('/', getUserFolders)
 folderRouter.get('/:id', getFolderByID)
