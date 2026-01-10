@@ -125,7 +125,7 @@ export default function LeftSidebar(){
             {/* Header */}
             <div className="px-5 mb-8 flex items-center justify-between group cursor-pointer">
                 <div className="flex items-center gap-2.5 text-zinc-100 font-semibold tracking-tight text-sm">
-                    <div className="w-6 h-6 bg-zinc-100 text-black flex items-center justify-center rounded-[4px]">
+                    <div className="w-6 h-6 bg-zinc-100 text-black flex items-center justify-center rounded-sm">
                         <Box size={14} />
                     </div>
                     <span>UR FILES</span>
@@ -153,7 +153,7 @@ export default function LeftSidebar(){
                     </Link>
 
                     <Link to={'/all-files'}>
-                        <div className={`flex items-center gap-3 px-2 py-1.5 rounded-[4px] text-sm transition-colors ${
+                        <div className={`flex items-center gap-3 px-2 py-1.5 rounded-sm text-sm transition-colors ${
                             isActiveRoute('/all-files')
                                 ? 'bg-zinc-800/50 text-zinc-100 border border-zinc-800'
                                 : 'hover:bg-zinc-800/30 hover:text-zinc-200 text-zinc-400'
@@ -164,7 +164,7 @@ export default function LeftSidebar(){
                     </Link>
 
                     <Link to={'/recent'}>
-                        <div className={`flex items-center gap-3 px-2 py-1.5 rounded-[4px] text-sm transition-colors ${
+                        <div className={`flex items-center gap-3 px-2 py-1.5 rounded-sm text-sm transition-colors ${
                             isActiveRoute('/recent')
                                 ? 'bg-zinc-800/50 text-zinc-100 border border-zinc-800'
                                 : 'hover:bg-zinc-800/30 hover:text-zinc-200 text-zinc-400'
