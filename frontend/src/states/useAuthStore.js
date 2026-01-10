@@ -1,7 +1,7 @@
 import {create} from 'zustand'
 import toast from 'react-hot-toast'
 
-const API = import.meta.env.NODE_ENV === 'prod' ? '/api' : 'http://localhost:3000/api'
+const API = import.meta.env.VITE_NODE_ENV === 'prod' ? '/api' : 'http://localhost:3000/api'
 
 export const useAuthStore = create ((set) => ({
     user: null,

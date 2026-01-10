@@ -5,7 +5,7 @@ import toast from 'react-hot-toast'
 import { CircleArrowLeft, Eye, EyeOff, UserPlus} from "lucide-react";
 import { ThreeDot } from "react-loading-indicators";
 
-const API = import.meta.env.NODE_ENV === 'prod' ? '/api' : 'http://localhost:3000/api'
+const API = import.meta.env.VITE_NODE_ENV === 'prod' ? '/api' : 'http://localhost:3000/api'
 
 export default function SignUp(){
     const [showPass, setShowPass] = useState(false)

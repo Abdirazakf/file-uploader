@@ -6,7 +6,7 @@ import { ThreeDot } from "react-loading-indicators";
 import { CircleArrowLeft, Box, EyeOff, Eye } from "lucide-react";
 import toast from 'react-hot-toast'
 
-const API = import.meta.env.NODE_ENV === 'prod' ? '/api' : 'http://localhost:3000/api'
+const API = import.meta.env.VITE_NODE_ENV === 'prod' ? '/api' : 'http://localhost:3000/api'
 
 export default function Login(){
     const setUser = useAuthStore((state) => state.setUser)
