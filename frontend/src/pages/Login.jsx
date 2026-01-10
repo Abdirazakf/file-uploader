@@ -6,6 +6,8 @@ import { ThreeDot } from "react-loading-indicators";
 import { CircleArrowLeft, Box, EyeOff, Eye } from "lucide-react";
 import toast from 'react-hot-toast'
 
+const API = import.meta.env.NODE_ENV === 'prod' ? '/api' : 'http://localhost:3000/api'
+
 export default function Login(){
     const setUser = useAuthStore((state) => state.setUser)
     const [showPass, setShowPass] = useState(false)
@@ -24,7 +26,7 @@ export default function Login(){
         }
 
         try {
-            const response = await fetch('/api/login', {
+            const response = await fetch(`${API}/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
