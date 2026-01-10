@@ -100,6 +100,7 @@ export default function LeftSidebar(){
             } else {
                 newSet.add(folderId)
             }
+            return newSet
         })
     }
 
@@ -214,9 +215,6 @@ export default function LeftSidebar(){
                         <div className="px-2 text-xs text-zinc-500">No folders yet</div>
                     ) : (
                         <div className="pl-2 relative">
-                            {/* Tree Line */}
-                            <div className="absolute left-4 top-0 bottom-0 w-px bg-zinc-800" />
-
                             {folders.map((folder, index) => {
                                 const color = getFolderColor(index)
                                 const hasSubFolders = folder.subfolders && folder.subfolders.length > 0
@@ -225,6 +223,10 @@ export default function LeftSidebar(){
                                 return(
                                     <div key={folder.id}>
                                         <div className="relative pl-5 py-1 flex items-center gap-2 text-sm text-zinc-300 hover:text-white cursor-pointer group">
+                                            <Link to={`/folder/${folder.id}`} className='flex items-center gap-2 flex-1 min-w-0'>
+                                                <Folder size={14} className={color} />
+                                                <span className="truncate">{folder.name}</span>
+                                            </Link>
                                             {hasSubFolders && (
                                                 <button onClick={() => toggleFolder(folder.id)}
                                                 className='absolute left-0 text-zinc-600'
@@ -236,13 +238,6 @@ export default function LeftSidebar(){
                                                     )}
                                                 </button>
                                             )}
-                                            <Link to={`/folder/${folder.id}`} className='flex items-center gap-2 flex-1 min-w-0'>
-                                                <Folder size={14} className={color} />
-                                                <span className="truncate">{folder.name}</span>
-                                            </Link>
-                                            <button className='hidden group-hover:block'>
-                                                <MoreHorizontal size={14} className='text-zinc-500' />
-                                            </button>
                                         </div>
 
                                         {/* Nested Folders */}
