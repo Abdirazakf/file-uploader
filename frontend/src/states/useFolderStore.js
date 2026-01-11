@@ -1,0 +1,235 @@
+import { create } from 'zustand'
+import toast from 'react-hot-toast'
+
+const API = import.meta.env.VITE_NODE_ENV === 'prod' ? '/api' : 'http://localhost:3000/api'
+
+export const useFolderStore = create((set, get) => ({
+    folders: [],
+    currentFolder: null,
+    loading: false,
+    error: null,
+    lastFetch: null,
+
+    fetchFolders: async (force = false) => {
+        const { lastFetch } = get()
+
+        // Cache for 30 sec or skip if recently fetch
+        if (!force && lastFetch && Date.now() - lastFetch < 30000){
+            return
+        }
+
+        set({ loading: true, error: null})
+
+        try {
+            const response = await fetch(`${API}/folders`, {
+                method: 'GET',
+                credentials: 'include'
+            })
+
+            const results = await response.json()
+
+            if (response.ok){
+                set({
+                    folders: results.folders,
+                    loading: false,
+                    lastFetch: Date.now()
+                })
+            } else {
+                set({ error: 'Failed to load folders', loading: false})
+                toast.error('Failed to load folders')
+            }
+        } catch {
+            set({ error: 'Failed to load folders', loading: false})
+            toast.error('Failed to load folders')
+        }
+    },
+
+    fetchFolderById: async (folderId) => {
+        set({ loading: true, error: null})
+
+        try {
+            const response = await fetch(`${API}/folders/${folderId}`, {
+                method: 'GET',
+                credentials: 'include'
+            })
+
+            const results = await response.json()
+
+            if (response.ok){
+                set({ currentFolder: results.folder, loading: false})
+                return results.folder
+            } else {
+                set({ error: 'Folder not found', loading: false})
+                toast.error('Folder not found')
+                return null
+            }
+        } catch {
+            set({ error: 'Folder not found', loading: false})
+            toast.error('Folder not found')
+            return null
+        }
+    },
+
+    clearCurrentFolder: () => set({ currentFolder: null }),
+
+    createFolder: async (name, parentId = null) => {
+        // Add temp folder
+        const tempId = `temp-${Date.now()}`
+        const tempFolder = {
+            id: tempId,
+            name,
+            parentId,
+            subfolders: [],
+            createdAt: new Date().toISOString()
+        }
+
+        // Add to UI immediately
+        set(state => ({
+            folders: [...state.folders, tempFolder]
+        }))
+
+        try {
+            const response = await fetch(`${API}/folders`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify({ name, parentId })
+            })
+
+            const results = await response.json()
+
+            if (response.ok){
+                // Replace temp folder with real one
+                set(state => ({
+                    folders: state.folders.map(f => f.id === tempId ? results.folder : f),
+                    lastFetch: Date.now()
+                }))
+                toast.success('Folder created successfully')
+                return results.folder
+            } else {
+                // Remove temp folder on error
+                set(state => ({
+                    folders: state.folders.filter(f => f.id !== tempId)
+                }))
+
+                results.errors.forEach(err => toast.error(err.msg))
+                return null
+            }
+        } catch {
+            set(state => ({
+                folders: state.folders.filter(f => f.id !== tempId)
+            }))
+            toast.error('Failed to create folder')
+            return null
+        }
+    },
+
+    updateFolder: async (folderId, newName) => {
+        // Store old folders for rollback
+        const oldFolders = get().folders
+
+        set(state => ({
+            folders: state.folders.map(f => f.id === folderId ? {...f, name: newName} : f)
+        }))
+
+        try {
+            const response = await fetch(`${API}/folders/${folderId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify({ name: newName })
+            })
+
+            const results = await response.json()
+
+            if (response.ok) {
+                // Update with server response
+                set(state => ({
+                    folders: state.folders.map(f => 
+                        f.id === folderId ? results.folder : f
+                    ),
+                    lastFetch: Date.now()
+                }))
+                toast.success('Folder updated successfully')
+                return results.folder
+            } else {
+                // Rollback on error
+                set({ folders: oldFolders})
+
+                results.errors.forEach(err => toast.error(err.msg))
+                return null
+            }
+        } catch {
+                set({ folders: oldFolders})
+                toast.error('Failed to update folder')
+                return null
+        }
+    },
+
+    deleteFolder: async (folderId) => {
+        // Store old folders for rollback
+        const oldFolders = get().folders
+
+        set(state => ({
+            folders: state.folders.filter(f => f.id !== folderId)
+        }))
+
+        try {
+            const response = await fetch(`${API}/folders/${folderId}`, {
+                method: 'DELETE',
+                credentials: 'include'
+            })
+
+            const results = await response.json()
+
+            if (response.ok) {
+                set({ lastFetch: Date.now() })
+                toast.success('Folder deleted successfully')
+                return true
+            } else {
+                // Rollback on error
+                set({ folders: oldFolders })
+                results.errors.forEach(err => toast.error(err.msg))
+                return false
+            }
+        } catch {
+            set({ folders: oldFolders })
+            toast.error('Failed to delete folder')
+            return false
+        }
+    },
+
+    // Force refresh
+    refresh: async () => {
+        await get().fetchFolders(true)
+    },
+
+    // Reset store (on logout)
+    reset: () => set({
+        folders: [],
+        currentFolder: null,
+        loading: false,
+        error: null,
+        lastFetch: null
+    })
+}))
+
+// Selectors for performance optimization
+export const useFolders = () => useFolderStore(state => state.folders)
+export const useCurrentFolder = () => useFolderStore(state => state.currentFolder)
+export const useFolderStoreLoading = () => useFolderStore(state => state.loading)
+export const useFolderStoreError = () => useFolderStore(state => state.error)
+
+// Actions selectors that don't cause re-renders)
+export const useFetchFolders = () => useFolderStore(state => state.fetchFolders)
+export const useFetchFolderById = () => useFolderStore(state => state.fetchFolderById)
+export const useCreateFolder = () => useFolderStore(state => state.createFolder)
+export const useUpdateFolder = () => useFolderStore(state => state.updateFolder)
+export const useDeleteFolder = () => useFolderStore(state => state.deleteFolder)
+export const useClearCurrentFolder = () => useFolderStore(state => state.clearCurrentFolder)
+export const useRefreshFolders = () => useFolderStore(state => state.refresh)
+export const useResetFolderStore = () => useFolderStore(state => state.reset)
