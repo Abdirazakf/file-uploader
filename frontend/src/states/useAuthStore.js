@@ -50,6 +50,11 @@ export const useAuthStore = create ((set) => ({
                 user: null,
                 auth: false
             })
+
+            const { useFolderStore } = await import('./useFolderStore')
+            useFolderStore.getState().reset()
+
+            toast.success('Logged out successfully')
         } catch (err){
             toast.error('Failed to logout')
             console.error('Logout failed:', err)
