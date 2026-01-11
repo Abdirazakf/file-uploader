@@ -1,9 +1,34 @@
 import { Link } from "react-router";
-import { useFolders } from "../../states/useFolderStore";
+import { useFolders, useFolderStoreLoading } from "../../states/useFolderStore";
 import FolderCard from './FolderCard'
 
 export default function FolderGrid({ viewMode = 'grid' }){
     const folders = useFolders()
+    const loading = useFolderStoreLoading()
+
+    if (loading) {
+        return (
+            <div>
+                <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-sm font-semibold text-zinc-200 tracking-tight">
+                        Folders
+                    </h2>
+                    <div className="h-4 w-16 bg-zinc-800 rounded animate-pulse"></div>
+                </div>
+
+                <div className={
+                    viewMode === 'grid' 
+                        ? 'grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8'
+                        : 'flex flex-col gap-2 mb-8'
+                }>
+                    {/* Show 5 skeleton cards */}
+                    {[...Array(5)].map((_, i) => (
+                        <FolderCard key={i} loading viewMode={viewMode} />
+                    ))}
+                </div>
+            </div>
+        )
+    }
 
     if (folders.length === 0){
         return (

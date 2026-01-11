@@ -11,8 +11,38 @@ const FOLDER_COLORS = [
     'text-cyan-400',
 ]
 
-export default function FolderCard({ folder, index, viewMode = 'grid '}){
+export default function FolderCard({ folder, index, viewMode = 'grid', loading = false}){
     const [showMenu, setShowMenu] = useState(false)
+    
+    if (loading) {
+        if (viewMode === 'list') {
+            return (
+                <div className="relative bg-zinc-900/30 border border-zinc-800/40 rounded-sm overflow-hidden p-3">
+                    <div className="flex items-center gap-3">
+                        <div className="w-5 h-5 bg-zinc-800 rounded animate-pulse"></div>
+                        <div className="flex-1 space-y-2">
+                            <div className="h-3 w-1/3 bg-zinc-800 rounded animate-pulse"></div>
+                            <div className="h-2 w-1/4 bg-zinc-800/50 rounded animate-pulse"></div>
+                        </div>
+                    </div>
+                </div>
+            )
+        }
+
+        return (
+            <div className="relative bg-zinc-900/30 border border-zinc-800/40 rounded-sm overflow-hidden">
+                <div className="p-3 space-y-3">
+                    <div className="w-5 h-5 bg-zinc-800 rounded animate-pulse"></div>
+                    
+                    <div className="space-y-2">
+                        <div className="h-3 w-2/3 bg-zinc-800 rounded animate-pulse"></div>
+                        <div className="h-2 w-1/2 bg-zinc-800/50 rounded animate-pulse"></div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+    
     const color = FOLDER_COLORS[index % FOLDER_COLORS.length]
     const isTemp = folder.id.toString().startsWith('temp-')
 
