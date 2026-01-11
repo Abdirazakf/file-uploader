@@ -2,6 +2,7 @@ import { useState } from 'react'
 import LeftSidebar from '../components/dashboard/LeftSidebar'
 import MainHeader from '../components/dashboard/MainHeader'
 import { useRefetchOnFocus } from '../hooks/useRefetchOnFocus'
+import FileUpload from '../components/dashboard/FileUpload'
 
 export default function Dashboard(){
     const [viewMode, setViewMode] = useState('grid')
@@ -10,6 +11,10 @@ export default function Dashboard(){
 
     const handleUploadClick = () => {
         console.log('Test: upload click working')
+    }
+
+    const handleFileDrop = (files) => {
+        console.log('Files dropped:', files)
     }
 
     return (
@@ -26,6 +31,12 @@ export default function Dashboard(){
                     onViewModeChange={setViewMode}
                     onUploadClick={handleUploadClick}
                 />
+
+                <div className="flex-1 overflow-y-auto p-6 relative">
+                    <div className="absolute inset-0 bg-grid opacity-[0.03] pointer-events-none"/>
+
+                    <FileUpload onUpload={handleFileDrop}/>
+                </div>
             </main>
 
             {/* Right sidebar (details panel) */}
