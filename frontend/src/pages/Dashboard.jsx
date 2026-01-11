@@ -3,6 +3,7 @@ import LeftSidebar from '../components/dashboard/LeftSidebar'
 import MainHeader from '../components/dashboard/MainHeader'
 import { useRefetchOnFocus } from '../hooks/useRefetchOnFocus'
 import FileUpload from '../components/dashboard/FileUpload'
+import FolderGrid from '../components/dashboard/FolderGrid'
 
 export default function Dashboard(){
     const [viewMode, setViewMode] = useState('grid')
@@ -36,6 +37,8 @@ export default function Dashboard(){
                     <div className="absolute inset-0 bg-grid opacity-[0.03] pointer-events-none"/>
 
                     <FileUpload onUpload={handleFileDrop}/>
+
+                    <FolderGrid viewMode={viewMode} />
                 </div>
             </main>
 
