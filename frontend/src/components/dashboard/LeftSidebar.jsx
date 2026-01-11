@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useAuthStore } from '../../states/useAuthStore'
 import { Link, useLocation } from 'react-router'
 import { Box, ChevronDown, ChevronRight, Clock, Folder, FolderOpen, LayoutGrid, MoreHorizontal, Plus, Power } from 'lucide-react'
-import toast from 'react-hot-toast'
+import { useFolders, useFetchFolders, useCreateFolder, useFolderStoreLoading } from '../../states/useFolderStore'
 
 const API = import.meta.env.VITE_NODE_ENV === 'prod' ? '/api' : 'http://localhost:3000/api'
 
@@ -18,8 +18,12 @@ const FOLDER_COLORS = [
 
 export default function LeftSidebar(){
     const { user, logoutUser } = useAuthStore()
-    const [folders, setFolders] = useState([])
-    const [loading, setLoading] = useState(false)
+
+    const folders = useFolders()
+    const loading = useFolderStoreLoading()
+    const fetchFolders = useFetchFolders()
+    const createFolder = useCreateFolder()
+    
     const [creatingFolder, setCreatingFolder] = useState(false)
     const [expandedFolders, setExpandedFolders] = useState(new Set())
     const [showInput, setShowInput] = useState(false)
@@ -28,68 +32,18 @@ export default function LeftSidebar(){
 
     useEffect(() => {
         fetchFolders()
-    }, [])
-
-    const fetchFolders = async () => {
-        setLoading(true)
-
-        try {
-            const response = await fetch(`${API}/folders`, {
-                method: 'GET',
-                credentials: 'include'
-            })
-
-            const result = await response.json()
-
-            if (response.ok){
-                setFolders(result.folders)
-            } else {
-                toast.error('Failed to load folders')
-            }
-        } catch {
-            toast.error('Failed to fetch folders')
-        } finally {
-            setLoading(false)
-        }
-    }
+    }, [fetchFolders])
 
     const handleSubmit = async (event) => {
         event.preventDefault()
 
-        if (!newFolderName.trim()){
-            toast.error('Folder name cannot be empty!')
-            return
-        }
+        if (!newFolderName.trim()) return
 
         setCreatingFolder(true)
-
-        try {
-            const response = await fetch(`${API}/folders`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                credentials: 'include',
-                body: JSON.stringify({
-                    name: newFolderName.trim()
-                })
-            })
-
-            const results = await response.json()
-
-            if (response.ok){
-                toast.success('Folder created successfully')
-                setNewFolderName('')
-                setShowInput(false)
-                fetchFolders()
-            } else {
-                results.errors.forEach(err => toast.error(err.msg))
-            }
-        } catch {
-            toast.error('Failed to create folder')
-        } finally {
-            setCreatingFolder(false)
-        }
+        await createFolder(newFolderName.trim())
+        setNewFolderName('')
+        setShowInput(false)
+        setCreatingFolder(false)
     }
 
     const toggleFolder = (folderId) => {
@@ -219,9 +173,10 @@ export default function LeftSidebar(){
                                 const color = getFolderColor(index)
                                 const hasSubFolders = folder.subfolders && folder.subfolders.length > 0
                                 const isExpanded = expandedFolders.has(folder.id)
+                                const isTemp = folder.id.toString().startsWith('temp-')
 
                                 return(
-                                    <div key={folder.id}>
+                                    <div key={folder.id} className={isTemp ? 'opacity-60' : ''}>
                                         <div className="relative pl-5 py-1 flex items-center gap-2 text-sm text-zinc-300 hover:text-white cursor-pointer group">
                                             <Link to={`/folder/${folder.id}`} className='flex items-center gap-2 flex-1 min-w-0'>
                                                 <Folder size={14} className={color} />
