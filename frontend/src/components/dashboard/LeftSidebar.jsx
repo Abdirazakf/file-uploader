@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useAuthStore } from '../../states/useAuthStore'
 import { Link, useLocation } from 'react-router'
-import { Box, ChevronDown, ChevronRight, Clock, Folder, FolderOpen, LayoutGrid, MoreHorizontal, Plus, Power } from 'lucide-react'
+import { Box, ChevronDown, ChevronRight, Folder, FolderOpen, LayoutGrid, MoreHorizontal, Plus, Power } from 'lucide-react'
 import { useFolders, useFetchFolders, useCreateFolder, useFolderStoreLoading } from '../../states/useFolderStore'
 import { FOLDER_COLORS } from '../../constants/colorPalettes'
 
@@ -105,17 +105,6 @@ export default function LeftSidebar(){
                             <FolderOpen size={16} />
                             <span className="font-medium">All Files</span>
                         </div>
-                    </Link>
-
-                    <Link to={'/recent'}>
-                        <div className={`flex items-center gap-3 px-2 py-1.5 rounded-sm text-sm transition-colors ${
-                            isActiveRoute('/recent')
-                                ? 'bg-zinc-800/50 text-zinc-100 border border-zinc-800'
-                                : 'hover:bg-zinc-800/30 hover:text-zinc-200 text-zinc-400'
-                        }`}>
-                            <Clock size={16} />
-                            <span className="font-medium">Recent</span>
-                        </div>                        
                     </Link>
                 </div>
 
