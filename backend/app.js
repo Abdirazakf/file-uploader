@@ -15,6 +15,11 @@ const fileRouter = require('./routes/fileRouter.js')
 
 const { isAuthenticated } = require('./middleware/authMiddleware.js')
 
+// Fix BigInt not being serialzed by JSON.stringify
+BigInt.prototype.toJSON = function(){
+    return this.toString()
+}
+
 const app = express()
 const port = process.env.PORT || 3000
 
