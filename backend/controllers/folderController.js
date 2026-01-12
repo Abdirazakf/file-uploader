@@ -45,6 +45,7 @@ exports.getFolderByID = [
 
         if (!errors.isEmpty()){
             return res.status(400).json({
+                success: false,
                 errors: errors.array()
             })
         }
@@ -81,6 +82,7 @@ exports.createFolderPost = [
 
         if (!errors.isEmpty()){
             return res.status(400).json({
+                success: false,
                 errors: errors.array()
             })
         }
@@ -122,6 +124,7 @@ exports.updateFolderPut = [
 
         if (!errors.isEmpty()){
             return res.status(400).json({
+                success: false,
                 errors: errors.array()
             })
         }
@@ -159,6 +162,7 @@ exports.deleteFolder = [
 
         if (!errors.isEmpty()){
             return res.status(400).json({
+                success: false,
                 errors: errors.array()
             })
         }
