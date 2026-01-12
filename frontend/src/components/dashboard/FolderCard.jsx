@@ -1,15 +1,7 @@
-import { Folder, MoreVertical } from "lucide-react"
 import { useState } from "react"
 import { Link } from "react-router"
-
-const FOLDER_COLORS = [
-    'text-blue-400',
-    'text-purple-400', 
-    'text-pink-400',
-    'text-yellow-400',
-    'text-green-400',
-    'text-cyan-400',
-]
+import { Folder, MoreVertical } from "lucide-react"
+import { FOLDER_COLORS } from "../../constants/colorPalettes"
 
 export default function FolderCard({ folder, index, viewMode = 'grid', loading = false}){
     const [showMenu, setShowMenu] = useState(false)
@@ -47,11 +39,12 @@ export default function FolderCard({ folder, index, viewMode = 'grid', loading =
     const isTemp = folder.id.toString().startsWith('temp-')
 
     // Folder stats
-    const fileCount = folder._count.files || 0
-    const subfolderCount = folder._count.subfolders || 0
+    const fileCount = folder._count?.files || 0
+    const subfolderCount = folder._count?.subfolders || 0
     const total = fileCount + subfolderCount
 
     const getItemText = () => {
+        if (!folder._count) return ''
         if (total === 0) return 'Empty'
         if (total === 1) return '1 item'
         return `${total} items`
@@ -59,6 +52,7 @@ export default function FolderCard({ folder, index, viewMode = 'grid', loading =
 
     // Placeholder size until logic implemented on backend
     const size = '0 MB'
+    const itemText = getItemText()
 
     if (viewMode === 'list'){
         return (
@@ -70,9 +64,11 @@ export default function FolderCard({ folder, index, viewMode = 'grid', loading =
                             <h3 className="text-sm font-medium text-zinc-200 truncate">
                                 {folder.name}
                             </h3>
-                            <p className="text-[10px] text-zinc-500">
-                                {getItemText()} - {size}
-                            </p>
+                            {itemText && (
+                                <p className="text-[10px] text-zinc-500">
+                                    {itemText} - {size}
+                                </p>
+                            )}
                         </div>
                     </div>
                     <button
@@ -109,9 +105,11 @@ export default function FolderCard({ folder, index, viewMode = 'grid', loading =
                     <h3 className="text-sm font-medium text-zinc-200 truncate">
                         {folder.name}
                     </h3>
-                    <p className="text-[10px] text-zinc-500">
-                        {getItemText()} · {size}
-                    </p>
+                    {itemText && (
+                        <p className="text-[10px] text-zinc-500">
+                            {getItemText()} · {size}
+                        </p>
+                    )}
                 </div>
 
                 {isTemp && (
