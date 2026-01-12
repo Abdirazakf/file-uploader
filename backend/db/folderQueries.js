@@ -1,5 +1,34 @@
 const prisma = require('./lib/prisma')
 
+async function buildPath(id, userId){
+    if (!id){
+        return []
+    }
+
+    const folder = await prisma.folder.findFirst({
+        where: {
+            id,
+            userId
+        },
+        select: {
+            id: true,
+            name: true,
+            parentId: true
+        }
+    })
+
+    if (!folder){
+        return []
+    }
+
+    if (folder.parentId){
+        const parentPath = await buildPath(folder.parentId, userId)
+        return [...parentPath, { id: folder.id, name: folder.name}]
+    }
+
+    return [{ id: folder.id, name: folder.name }]
+}
+
 async function createFolder (name, userId, parentId = null){
     const folder = await prisma.folder.create({
         data: {
@@ -16,6 +45,8 @@ async function createFolder (name, userId, parentId = null){
             }
         }
     })
+
+    folder.path = await buildPath(folder.id, userId)
 
     return folder
 }
@@ -42,17 +73,21 @@ async function getUserRootFolders (userId){
             }
         },
         orderBy: {
-            createdAt: 'desc'
+            createdAt: 'asc'
         }
     })
+
+    for (const folder of folders) {
+        folder.path = [{ id: folder.id, name: folder.name }]
+    }
 
     return folders
 }
 
-async function getFolderByID (folderId, userId) {
+async function getFolderByID (id, userId) {
     const folder = await prisma.folder.findFirst({
         where: {
-            id: folderId,
+            id,
             userId
         },
         include: {
@@ -95,13 +130,17 @@ async function getFolderByID (folderId, userId) {
         }
     })
 
+    if (!folder) return null
+
+    folder.path = await buildPath(id, userId)
+
     return folder
 }
 
-async function updateFolder (folderId, userId, newName){
+async function updateFolder (id, userId, newName){
     const folder = await prisma.folder.updateMany({
         where: {
-            id: folderId,
+            id,
             userId
         },
         data: {
@@ -113,13 +152,13 @@ async function updateFolder (folderId, userId, newName){
         return null
     }
 
-    return await getFolderByID(folderId, userId)
+    return await getFolderByID(id, userId)
 }
 
-async function deleteFolder (folderId, userId){
+async function deleteFolder (id, userId){
     const folder = await prisma.folder.deleteMany({
         where: {
-            id: folderId,
+            id,
             userId
         }
     })
@@ -127,10 +166,10 @@ async function deleteFolder (folderId, userId){
     return folder.count > 0
 }
 
-async function checkFolderOwner (folderId, userId){
+async function checkFolderOwner (id, userId){
     const folder = await prisma.folder.findFirst({
         where: {
-            id: folderId,
+            id,
             userId
         }
     })
@@ -144,5 +183,6 @@ module.exports = {
     getFolderByID,
     updateFolder,
     deleteFolder,
-    checkFolderOwner
+    checkFolderOwner,
+    buildPath
 }
