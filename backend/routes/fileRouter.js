@@ -4,11 +4,13 @@ const {
     uploadMiddleware,
     uploadFile,
     getRootFiles,
+    getAllFiles,
     getFileByID,
     updateFile,
     deleteFile,
 } = require('../controllers/fileController')
 
+fileRouter.get('/all', getAllFiles)
 fileRouter.get('/', getRootFiles)
 fileRouter.get('/:id', getFileByID)
 

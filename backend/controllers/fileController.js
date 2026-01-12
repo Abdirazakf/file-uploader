@@ -133,6 +133,21 @@ exports.getRootFiles = async (req, res, next) => {
     }
 }
 
+exports.getAllFiles = async (req, res, next) => {
+    try {
+        const userId = req.user.id
+        const files = await fileDB.getAllFiles(userId)
+
+        res.json({
+            success: true,
+            files
+        })
+    } catch (err){
+        console.error('Failed to get all files:', err)
+        next(err)
+    }
+}
+
 exports.getFileByID = [
     validateFileID,
     async (req, res, next) => {
