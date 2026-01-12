@@ -3,9 +3,11 @@ import {useAuthStore} from './states/useAuthStore'
 import {Routes, Route} from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import GuestRoute from './components/GuestRoute'
+import AuthRoute from './components/AuthRoute'
 import Homepage from './pages/Homepage'
 import SignUp from './pages/SignUp'
 import Login from './pages/Login'
+import FolderView from './pages/FolderView'
 
 export default function App(){
   const checkAuth = useAuthStore((state) => state.checkAuth)
@@ -31,6 +33,13 @@ export default function App(){
           <GuestRoute>
             <Login />
           </GuestRoute>
+        } />
+
+        <Route path='/folder/:folderId'
+        element={
+          <AuthRoute>
+            <FolderView />
+          </AuthRoute>
         } />
 
       </Routes>
