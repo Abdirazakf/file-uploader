@@ -3,18 +3,7 @@ import { useAuthStore } from '../../states/useAuthStore'
 import { Link, useLocation } from 'react-router'
 import { Box, ChevronDown, ChevronRight, Clock, Folder, FolderOpen, LayoutGrid, MoreHorizontal, Plus, Power } from 'lucide-react'
 import { useFolders, useFetchFolders, useCreateFolder, useFolderStoreLoading } from '../../states/useFolderStore'
-
-const API = import.meta.env.VITE_NODE_ENV === 'prod' ? '/api' : 'http://localhost:3000/api'
-
-// Color palette for folders
-const FOLDER_COLORS = [
-    'text-blue-400',
-    'text-purple-400', 
-    'text-pink-400',
-    'text-yellow-400',
-    'text-green-400',
-    'text-cyan-400',
-]
+import { FOLDER_COLORS } from '../../constants/colorPalettes'
 
 export default function LeftSidebar(){
     const { user, logoutUser } = useAuthStore()
