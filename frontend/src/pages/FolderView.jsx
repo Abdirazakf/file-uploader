@@ -182,7 +182,7 @@ export default function FolderView(){
                                             folder={subfolder} 
                                             index={index}
                                             viewMode="grid"
-                                            onFolderUpdated={handleFolderUpdate}
+                                            onFolderUpdate={handleFolderUpdate}
                                         />
                                     ))}
                                 </div>

@@ -4,7 +4,7 @@ import { Folder, MoreVertical, Edit2, Trash2 } from "lucide-react"
 import { FOLDER_COLORS } from "../../constants/colorPalettes"
 import { useDeleteFolder, useUpdateFolder } from "../../states/useFolderStore"
 
-export default function FolderCard({ folder, index, viewMode = 'grid', loading = false, handleFolderUpdate}){
+export default function FolderCard({ folder, index, viewMode = 'grid', loading = false, onFolderUpdate}){
     const [showMenu, setShowMenu] = useState(false)
     const [isRenaming, setIsRenaming] = useState(false)
     const [newName, setNewName] = useState(folder?.name || '')
@@ -43,7 +43,7 @@ export default function FolderCard({ folder, index, viewMode = 'grid', loading =
 
         if (result){
             setIsRenaming(false)
-            if (handleFolderUpdate) handleFolderUpdate()
+            if (onFolderUpdate) onFolderUpdate()
         } else {
             setNewName(folder.name)
         }
@@ -58,7 +58,7 @@ export default function FolderCard({ folder, index, viewMode = 'grid', loading =
         const result = await deleteFolder(folder.id)
 
         if (result){
-            if (handleFolderUpdate) handleFolderUpdate()
+            if (onFolderUpdate) onFolderUpdate()
         }
 
         setIsDeleting(false)
