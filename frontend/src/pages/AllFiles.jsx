@@ -1,5 +1,4 @@
 import { useEffect } from "react"
-import { ThreeDot } from "react-loading-indicators"
 import FileCard from "../components/dashboard/FileCard"
 import LeftSidebar from "../components/dashboard/LeftSidebar"
 import MainHeader from "../components/dashboard/MainHeader"
