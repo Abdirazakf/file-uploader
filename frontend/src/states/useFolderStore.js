@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import toast from 'react-hot-toast'
+import { showErrorToast, showSuccessToast } from '../components/Toast'
 
 const API = import.meta.env.VITE_NODE_ENV === 'prod' ? '/api' : 'http://localhost:3000/api'
 
@@ -34,18 +34,15 @@ export const useFolderStore = create((set, get) => ({
                     loading: false,
                     lastFetch: Date.now()
                 })
-            } else {
-                set({ error: 'Failed to load folders', loading: false})
-                toast.error('Failed to load folders')
             }
         } catch {
             set({ error: 'Failed to load folders', loading: false})
-            toast.error('Failed to load folders')
+            showErrorToast('Failed to load folders')
         }
     },
 
     fetchFolderById: async (folderId) => {
-        set({ loading: true, error: null})
+        set({ loading: true, error: null, currentFolder: null})
 
         try {
             const response = await fetch(`${API}/folders/${folderId}`, {
@@ -59,13 +56,13 @@ export const useFolderStore = create((set, get) => ({
                 set({ currentFolder: results.folder, loading: false})
                 return results.folder
             } else {
-                set({ error: 'Folder not found', loading: false})
-                toast.error('Folder not found')
+                set({ error: 'Folder not found', loading: false })
+                showErrorToast('Folder not found')
                 return null
             }
         } catch {
-            set({ error: 'Folder not found', loading: false})
-            toast.error('Folder not found')
+            set({ error: 'Folder not found', loading: false })
+            showErrorToast('Folder not found')
             return null
         }
     },
@@ -106,7 +103,7 @@ export const useFolderStore = create((set, get) => ({
                     folders: state.folders.map(f => f.id === tempId ? results.folder : f),
                     lastFetch: Date.now()
                 }))
-                toast.success('Folder created successfully')
+                showSuccessToast('Folder created successfully')
                 return results.folder
             } else {
                 // Remove temp folder on error
@@ -114,14 +111,14 @@ export const useFolderStore = create((set, get) => ({
                     folders: state.folders.filter(f => f.id !== tempId)
                 }))
 
-                results.errors.forEach(err => toast.error(err.msg))
+                results.errors.forEach(err => showErrorToast(err.msg))
                 return null
             }
         } catch {
             set(state => ({
                 folders: state.folders.filter(f => f.id !== tempId)
             }))
-            toast.error('Failed to create folder')
+            showErrorToast('Failed to create folder')
             return null
         }
     },
@@ -154,18 +151,18 @@ export const useFolderStore = create((set, get) => ({
                     ),
                     lastFetch: Date.now()
                 }))
-                toast.success('Folder updated successfully')
+                showSuccessToast('Folder updated successfully')
                 return results.folder
             } else {
                 // Rollback on error
                 set({ folders: oldFolders})
 
-                results.errors.forEach(err => toast.error(err.msg))
+                results.errors.forEach(err => showErrorToast(err.msg))
                 return null
             }
         } catch {
                 set({ folders: oldFolders})
-                toast.error('Failed to update folder')
+                showErrorToast('Failed to update folder')
                 return null
         }
     },
@@ -188,17 +185,17 @@ export const useFolderStore = create((set, get) => ({
 
             if (response.ok) {
                 set({ lastFetch: Date.now() })
-                toast.success('Folder deleted successfully')
+                showSuccessToast('Folder deleted successfully')
                 return true
             } else {
                 // Rollback on error
                 set({ folders: oldFolders })
-                results.errors.forEach(err => toast.error(err.msg))
+                results.errors.forEach(err => showErrorToast(err.msg))
                 return false
             }
         } catch {
             set({ folders: oldFolders })
-            toast.error('Failed to delete folder')
+            showErrorToast('Failed to delete folder')
             return false
         }
     },
