@@ -5,9 +5,11 @@ import { useRefetchOnFocus } from '../hooks/useRefetchOnFocus'
 import FileUpload from '../components/dashboard/FileUpload'
 import FolderGrid from '../components/dashboard/FolderGrid'
 import FileGrid from '../components/dashboard/FileGrid'
+import { useFetchAllFiles } from '../states/useFileStore'
 
 export default function Dashboard(){
     const [viewMode, setViewMode] = useState('grid')
+    const fetchAllFiles = useFetchAllFiles()
 
     useRefetchOnFocus()
 
@@ -15,8 +17,8 @@ export default function Dashboard(){
         console.log('Test: upload click working')
     }
 
-    const handleFileDrop = (files) => {
-        console.log('Files dropped:', files)
+    const handleFileDrop = async () => {        
+        await fetchAllFiles(true)
     }
 
     return (
