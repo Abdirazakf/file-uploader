@@ -1,5 +1,5 @@
 import { create } from "zustand"
-import { showErrorToast, showSuccessToast } from "../components/Toast"
+import { showErrorToast } from "../components/Toast"
 
 const API = import.meta.env.VITE_NODE_ENV === 'prod' ? '/api' : 'http://localhost:3000/api'
 
@@ -60,7 +60,6 @@ export const useFileStore = create((set, get) => ({
                     loading: false,
                     lastFetch: Date.now()
                 })
-                showSuccessToast('All files fetched')
             } else {
                 set({ error: 'Failed to fetch files', loading: false })
                 showErrorToast('Failed to fetch files')
