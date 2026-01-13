@@ -2,8 +2,11 @@ import { useEffect, useState } from 'react'
 import { useAuthStore } from '../../states/useAuthStore'
 import { Link, useLocation } from 'react-router'
 import { Box, ChevronDown, ChevronRight, Folder, FolderOpen, LayoutGrid, MoreHorizontal, Plus, Power } from 'lucide-react'
-import { useFolders, useFetchFolders, useCreateFolder, useFolderStoreLoading } from '../../states/useFolderStore'
+import { useFolders, useFetchFolders, useFolderStoreLoading } from '../../states/useFolderStore'
 import { FOLDER_COLORS } from '../../constants/colorPalettes'
+import { showErrorToast, showSuccessToast } from '../Toast'
+
+const API = import.meta.env.VITE_NODE_ENV === 'prod' ? '/api' : 'http://localhost:3000/api'
 
 export default function LeftSidebar(){
     const { user, logoutUser } = useAuthStore()
@@ -11,7 +14,6 @@ export default function LeftSidebar(){
     const folders = useFolders()
     const loading = useFolderStoreLoading()
     const fetchFolders = useFetchFolders()
-    const createFolder = useCreateFolder()
     
     const [creatingFolder, setCreatingFolder] = useState(false)
     const [expandedFolders, setExpandedFolders] = useState(new Set())
@@ -29,10 +31,38 @@ export default function LeftSidebar(){
         if (!newFolderName.trim()) return
 
         setCreatingFolder(true)
-        await createFolder(newFolderName.trim())
-        setNewFolderName('')
-        setShowInput(false)
-        setCreatingFolder(false)
+
+        try {
+            const name = newFolderName.trim()
+
+            const response = await fetch(`${API}/folders`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify({ name })
+            })
+
+            const results = await response.json()
+            
+            if (response.ok){
+                setNewFolderName('')
+                setShowInput(false)
+                showSuccessToast('Folder created successfully')
+                fetchFolders(true)
+            } else {
+                setNewFolderName('')
+                setShowInput(false)
+                results.errors.forEach(err => {
+                    showErrorToast(err.msg)
+                })
+            }
+        } catch {
+            showErrorToast('Failed to create folder')
+        } finally {
+            setCreatingFolder(false)
+        }
     }
 
     const toggleFolder = (folderId) => {
