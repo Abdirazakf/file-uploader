@@ -9,6 +9,7 @@ import SignUp from './pages/SignUp'
 import Login from './pages/Login'
 import FolderView from './pages/FolderView'
 import AllFiles from './pages/AllFiles'
+import AllFolders from './pages/AllFolders'
 
 export default function App(){
   const checkAuth = useAuthStore((state) => state.checkAuth)
@@ -47,6 +48,13 @@ export default function App(){
         element={
           <AuthRoute>
             <AllFiles />
+          </AuthRoute>
+        } />
+
+        <Route path='/folders/all'
+        element={
+          <AuthRoute>
+            <AllFolders />
           </AuthRoute>
         } />
 
