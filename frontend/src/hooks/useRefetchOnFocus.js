@@ -9,12 +9,7 @@ import { useFolderStore } from '../states/useFolderStore'
 export function useRefetchOnFocus(){
     const fetchFolders = useFolderStore(state => state.fetchFolders)
 
-    useEffect(() => {
-        const handleFocus = () => {
-            // Refetch when window gains focus
-            fetchFolders(true) // Bypasses cache
-        }
-
+    useEffect(() =>{
         const handleVisibilityChange = () => {
             // Refetch when tab becomes visible
             if (document.visibilityState === 'visible'){
@@ -22,11 +17,9 @@ export function useRefetchOnFocus(){
             }
         }
 
-        window.addEventListener('focus', handleFocus)
         document.addEventListener('visibilitychange', handleVisibilityChange)
 
         return () => {
-            window.removeEventListener('focus', handleFocus)
             document.removeEventListener('visibilitychange', handleVisibilityChange)
         }
     }, [fetchFolders])
