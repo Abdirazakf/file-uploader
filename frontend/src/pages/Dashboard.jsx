@@ -38,7 +38,7 @@ export default function Dashboard(){
 
                     <FileUpload onUpload={handleFileDrop}/>
 
-                    <FolderGrid viewMode={viewMode} />
+                    <FolderGrid viewMode={viewMode} viewAll/>
                 </div>
             </main>
 
