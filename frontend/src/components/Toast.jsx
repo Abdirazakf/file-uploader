@@ -28,6 +28,7 @@ export const showSuccessToast = (title, message) => {
         </div>
     ), {
         duration: 3000,
+        position: 'bottom-right'
     });
 };
 
@@ -57,5 +58,6 @@ export const showErrorToast = (title, message) => {
         </div>
     ), {
         duration: 3000,
+        position: 'bottom-right'
     });
 };
