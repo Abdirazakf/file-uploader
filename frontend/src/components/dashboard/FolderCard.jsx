@@ -1,10 +1,68 @@
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Link } from "react-router"
-import { Folder, MoreVertical } from "lucide-react"
+import { Folder, MoreVertical, Edit2, Trash2 } from "lucide-react"
 import { FOLDER_COLORS } from "../../constants/colorPalettes"
+import { useDeleteFolder, useUpdateFolder } from "../../states/useFolderStore"
 
-export default function FolderCard({ folder, index, viewMode = 'grid', loading = false}){
+export default function FolderCard({ folder, index, viewMode = 'grid', loading = false, handleFolderUpdate}){
     const [showMenu, setShowMenu] = useState(false)
+    const [isRenaming, setIsRenaming] = useState(false)
+    const [newName, setNewName] = useState(folder?.name || '')
+    const [isDeleting, setIsDeleting] = useState(false)
+
+    const menuRef = useRef(null)
+    const updateFolder = useUpdateFolder()
+    const deleteFolder = useDeleteFolder()
+
+    useEffect(() => {
+        const handleOutsideClick = (event) => {
+            if (menuRef.current && !menuRef.current.contains(event.target)){
+                setShowMenu(false)
+            }
+        }
+
+        if (showMenu){
+            document.addEventListener('mousedown', handleOutsideClick)
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleOutsideClick)
+        }
+    }, [showMenu])
+
+    const handleRename = async (event) => {
+        event.preventDefault()
+
+        if (!newName.trim() || newName === folder.name){
+            setIsRenaming(false)
+            setNewName(folder.name)
+            return
+        }
+
+        const result = await updateFolder(folder.id, newName.trim())
+
+        if (result){
+            setIsRenaming(false)
+            if (handleFolderUpdate) handleFolderUpdate()
+        } else {
+            setNewName(folder.name)
+        }
+    }
+
+    const handleDelete = async () => {
+        if (!confirm(`Are you sure you want to delete "${folder.name}"? This cannot be undone.`)){
+            return
+        }
+
+        setIsDeleting(true)
+        const result = await deleteFolder(folder.id)
+
+        if (result){
+            if (handleFolderUpdate) handleFolderUpdate()
+        }
+
+        setIsDeleting(false)
+    }
     
     if (loading) {
         if (viewMode === 'list') {
@@ -54,70 +112,162 @@ export default function FolderCard({ folder, index, viewMode = 'grid', loading =
     const size = '0 MB'
     const itemText = getItemText()
 
-    if (viewMode === 'list'){
+if (viewMode === 'list'){
         return (
-            <Link to={`/folder/${folder.id}`}>
-                <div className={`group flex items-center justify-between p-3 bg-zinc-900/30 border border-zinc-800/60 hover:border-zinc-700 hover:bg-zinc-900 rounded-sm cursor-pointer transition-all ${isTemp ? 'opacity-60' : ''}`}>
-                    <div className="flex items-center gap-3 flex-1 min-w-0">
-                        <Folder size={20} className={color} />
-                        <div className="flex-1 min-w-0">
-                            <h3 className="text-sm font-medium text-zinc-200 truncate">
-                                {folder.name}
-                            </h3>
-                            {itemText && (
-                                <p className="text-[10px] text-zinc-500">
-                                    {itemText} - {size}
-                                </p>
-                            )}
-                        </div>
+            <div className={`group relative flex items-center justify-between p-3 bg-zinc-900/30 border border-zinc-800/60 hover:border-zinc-700 hover:bg-zinc-900 rounded-sm transition-all ${isTemp || isDeleting ? 'opacity-60 pointer-events-none' : ''}`}>
+                <Link to={`/folder/${folder.id}`} className="flex items-center gap-3 flex-1 min-w-0">
+                    <Folder size={20} className={color} />
+                    <div className="flex-1 min-w-0">
+                        {isRenaming ? (
+                            <form onSubmit={handleRename} onClick={(e) => e.stopPropagation()}>
+                                <input
+                                    type="text"
+                                    value={newName}
+                                    onChange={(e) => setNewName(e.target.value)}
+                                    onBlur={handleRename}
+                                    autoFocus
+                                    className="w-full h-7 px-2 bg-zinc-900 border border-zinc-700 rounded-sm text-sm text-zinc-100 focus:outline-none focus:ring-1 focus:ring-zinc-500"
+                                />
+                            </form>
+                        ) : (
+                            <>
+                                <h3 className="text-sm font-medium text-zinc-200 truncate">
+                                    {folder.name}
+                                </h3>
+                                {itemText && (
+                                    <p className="text-[10px] text-zinc-500">
+                                        {itemText} - {size}
+                                    </p>
+                                )}
+                            </>
+                        )}
                     </div>
+                </Link>
+                
+                {/* Context Menu Button */}
+                <div className="relative" ref={menuRef}>
                     <button
                         onClick={(e) => {
                             e.preventDefault()
+                            e.stopPropagation()
                             setShowMenu(!showMenu)
                         }}
                         className="opacity-0 group-hover:opacity-100 p-1 hover:bg-zinc-800 rounded transition-opacity text-zinc-400"
                     >
                         <MoreVertical size={14} />
                     </button>
+
+                    {/* Dropdown Menu */}
+                    {showMenu && (
+                        <div className="absolute right-0 top-8 z-50 w-48 bg-zinc-900 border border-zinc-800 rounded-sm shadow-lg py-1">
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    setShowMenu(false)
+                                    setIsRenaming(true)
+                                }}
+                                className="w-full flex items-center gap-2 px-3 py-2 text-sm text-zinc-300 hover:bg-zinc-800 transition-colors"
+                            >
+                                <Edit2 size={14} />
+                                Rename
+                            </button>
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    setShowMenu(false)
+                                    handleDelete()
+                                }}
+                                className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-400 hover:bg-zinc-800 transition-colors"
+                            >
+                                <Trash2 size={14} />
+                                Delete
+                            </button>
+                        </div>
+                    )}
                 </div>
-            </Link>
+            </div>
         )
     }
 
     return (
-        <Link to={`/folder/${folder.id}`}>
-            <div className={`group relative p-3 bg-zinc-900/30 border border-zinc-800/60 hover:border-zinc-700 hover:bg-zinc-900 hover:shadow-lg rounded-sm cursor-pointer transition-all duration-200 hover:-translate-y-0.5 ${isTemp ? 'opacity-60' : ''}`}>
-                <div className="flex items-start justify-between mb-3">
-                    <Folder size={20} className={color} />
+        <div className={`group relative p-3 bg-zinc-900/30 border border-zinc-800/60 hover:border-zinc-700 hover:bg-zinc-900 hover:shadow-lg rounded-sm transition-all duration-200 ${!isRenaming && 'hover:-translate-y-0.5'} ${isTemp || isDeleting ? 'opacity-60 pointer-events-none' : ''}`}>
+            <div className="flex items-start justify-between mb-3">
+                <Folder size={20} className={color} />
+                
+                {/* Context Menu Button */}
+                <div className="relative" ref={menuRef}>
                     <button 
                         onClick={(e) => {
                             e.preventDefault()
+                            e.stopPropagation()
                             setShowMenu(!showMenu)
                         }}
-                        className="opacity-0 group-hover:opacity-100 p-1 hover:bg-zinc-800 rounded transition-opacity text-zinc-400"
+                        className="opacity-0 group-hover:opacity-100 p-1 hover:bg-zinc-800 rounded transition-opacity text-zinc-400 z-10"
                     >
                         <MoreVertical size={14} />
                     </button>
-                </div>
 
-                <div className="space-y-0.5">
-                    <h3 className="text-sm font-medium text-zinc-200 truncate">
-                        {folder.name}
-                    </h3>
-                    {itemText && (
-                        <p className="text-[10px] text-zinc-500">
-                            {getItemText()} · {size}
-                        </p>
+                    {/* Dropdown Menu */}
+                    {showMenu && (
+                        <div className="absolute right-0 top-8 z-50 w-48 bg-zinc-900 border border-zinc-800 rounded-sm shadow-lg py-1">
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    setShowMenu(false)
+                                    setIsRenaming(true)
+                                }}
+                                className="w-full flex items-center gap-2 px-3 py-2 text-sm text-zinc-300 hover:bg-zinc-800 transition-colors"
+                            >
+                                <Edit2 size={14} />
+                                Rename
+                            </button>
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    setShowMenu(false)
+                                    handleDelete()
+                                }}
+                                className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-400 hover:bg-zinc-800 transition-colors"
+                            >
+                                <Trash2 size={14} />
+                                Delete
+                            </button>
+                        </div>
                     )}
                 </div>
-
-                {isTemp && (
-                    <div className="absolute top-2 right-2">
-                        <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
-                    </div>
-                )}
             </div>
-        </Link>
+
+            {isRenaming ? (
+                <form onSubmit={handleRename} onClick={(e) => e.stopPropagation()}>
+                    <input
+                        type="text"
+                        value={newName}
+                        onChange={(e) => setNewName(e.target.value)}
+                        onBlur={handleRename}
+                        autoFocus
+                        className="w-full h-8 px-2 bg-zinc-900 border border-zinc-700 rounded-sm text-sm text-zinc-100 focus:outline-none focus:ring-1 focus:ring-zinc-500"
+                    />
+                </form>
+            ) : (
+                <Link to={`/folder/${folder.id}`}>
+                    <div className="space-y-0.5 cursor-pointer">
+                        <h3 className="text-sm font-medium text-zinc-200 truncate">
+                            {folder.name}
+                        </h3>
+                        {itemText && (
+                            <p className="text-[10px] text-zinc-500">
+                                {getItemText()} · {size}
+                            </p>
+                        )}
+                    </div>
+                </Link>
+            )}
+
+            {isTemp && (
+                <div className="absolute top-2 right-2">
+                    <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
+                </div>
+            )}
+        </div>
     )
 }
