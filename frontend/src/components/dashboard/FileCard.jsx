@@ -76,7 +76,6 @@ export default function FileCard({ file, loading = false}){
                         onError={(e) => {
                             // Fallback to icon if image fails to load
                             e.target.style.display = 'none'
-                            e.target.parentElement.innerHTML = `<div class="w-full h-full flex items-center justify-center"><span class="text-zinc-600">${Icon.name}</span></div>`
                         }}
                     />
                 ) : (
