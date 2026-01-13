@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Link } from "react-router";
-import toast from 'react-hot-toast'
+import { showErrorToast, showSuccessToast } from "../components/Toast";
 import { CircleArrowLeft, Eye, EyeOff, UserPlus} from "lucide-react";
 import { ThreeDot } from "react-loading-indicators";
 
@@ -37,14 +37,14 @@ export default function SignUp(){
 
             if (!response.ok){
                 result.errors.forEach(err => {
-                    toast.error(err.msg)
+                    showErrorToast(err.msg)
                 })
             } else {
-                toast.success('Account created successfully!')
+                showSuccessToast('Account created successfully!')
                 setTimeout(() => navigate('/login'), 500)
             }
         } catch {
-            toast.error('Something went wrong. Please try again.')
+            showErrorToast('Something went wrong. Please try again.')
         } finally {
             setLoading(false)
         }

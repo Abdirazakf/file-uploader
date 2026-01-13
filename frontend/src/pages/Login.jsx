@@ -4,7 +4,7 @@ import { useNavigate } from "react-router";
 import { Link } from "react-router";
 import { ThreeDot } from "react-loading-indicators";
 import { CircleArrowLeft, Box, EyeOff, Eye } from "lucide-react";
-import toast from 'react-hot-toast'
+import { showErrorToast, showSuccessToast } from "../components/Toast";
 
 const API = import.meta.env.VITE_NODE_ENV === 'prod' ? '/api' : 'http://localhost:3000/api'
 
@@ -40,18 +40,18 @@ export default function Login(){
             if (!response.ok){
                 if (results.error){
                     results.errors.forEach(err => {
-                        toast.error(err.msg)
+                        showErrorToast(err.msg)
                     })
                 } else {
-                    toast.error('Login Failed. Please try again')
+                    showErrorToast('Login Failed. Please try again')
                 }
             } else {
                 setUser(results.user)
-                toast.success('Login Successful')
+                showSuccessToast('Login Successful')
                 setTimeout(() => navigate('/'), 500)
             }
         } catch {
-            toast.error('Something went wrong. Please try again')
+            showErrorToast('Something went wrong. Please try again')
         } finally {
             setLoading(false)
         }
