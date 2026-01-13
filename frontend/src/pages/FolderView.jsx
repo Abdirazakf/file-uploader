@@ -1,12 +1,12 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router'
-import { useFetchFolderById, useCurrentFolder, useFolderStoreLoading } from '../states/useFolderStore'
+import { useFetchFolderById, useCurrentFolder, useFolderStoreLoading, useCreateFolder } from '../states/useFolderStore'
 import LeftSideBar from '../components/dashboard/LeftSidebar'
 import FolderCard from '../components/dashboard/FolderCard'
 import FileCard from '../components/dashboard/FileCard'
 import MainHeader from '../components/dashboard/MainHeader'
 import { formatDate, formatPath } from '../utils/formatData.js'
-import { Plus, Folder } from 'lucide-react'
+import { Plus, Folder, FolderPlus, File } from 'lucide-react'
 import { ThreeDot } from 'react-loading-indicators'
 
 export default function FolderView(){
@@ -14,6 +14,11 @@ export default function FolderView(){
     const fetchFolderById = useFetchFolderById()
     const currentFolder = useCurrentFolder()
     const loading = useFolderStoreLoading()
+    const createFolder = useCreateFolder()
+
+    const [showNewInput, setShowNewInput] = useState(false)
+    const [newFolderName, setNewFolderName] = useState('')
+    const [creating, setCreating] = useState(false)
 
     useEffect(() => {
         if (folderId){
@@ -25,17 +30,46 @@ export default function FolderView(){
         event.preventDefault()
         console.log('Uploaded file')
     }
+
+    const handleCreateFolder = async (event) => {
+        event.preventDefault()
+
+        if (!newFolderName.trim()) return
+
+        setCreating(true)
+
+        const result = await createFolder(newFolderName.trim(), folderId)
+
+        if (result){
+            await fetchFolderById(folderId)
+            setNewFolderName('')
+            setShowNewInput(false)
+        }
+
+        setCreating(false)
+    }
+
+    const handleFolderUpdate = async () => {
+        await fetchFolderById(folderId)
+    }
     
     const breadcrumbs = formatPath(currentFolder)
 
     const folderActions = (
         <>
             <button 
+                onClick={() => setShowNewInput(true)}
+                className="flex items-center gap-2 bg-transparent border border-zinc-800 text-zinc-300 hover:text-white px-3 py-1.5 rounded-sm text-sm font-medium transition-colors"
+            >
+                <FolderPlus size={14} />
+                <span className="hidden sm:inline">New Folder</span>
+            </button>
+            <button 
                 onClick={handleSubmit}
                 className="hidden sm:flex items-center gap-2 bg-zinc-100 hover:bg-white text-black px-3 py-1.5 rounded-sm text-sm font-medium transition-colors"
             >
                 <Plus size={14} />
-                <span>New</span>
+                <span>Upload</span>
             </button>
         </>
     )
@@ -74,7 +108,7 @@ export default function FolderView(){
                         <div className="mb-8 flex items-end justify-between">
                             <div>
                                 <div className="flex items-center gap-3 mb-2">
-                                    <div className={`w-10 h-10 border rounded-lg flex items-center justify-center`}>
+                                    <div className="w-10 h-10 border border-zinc-800 rounded-lg flex items-center justify-center">
                                         <Folder size={20} />
                                     </div>
                                     <div className='space-y-0.5'>
@@ -90,11 +124,57 @@ export default function FolderView(){
                         </div>
 
                         {/* Subfolders Section */}
-                        {currentFolder.subfolders && currentFolder.subfolders.length > 0 && (
-                            <div className="mb-6">
-                                <h3 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">
-                                    Subfolders ({currentFolder.subfolders.length})
+                        <div className="mb-6">
+                            <div className="flex items-center justify-between mb-3">
+                                <h3 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">
+                                    Subfolders ({currentFolder.subfolders?.length || 0})
                                 </h3>
+                                {!showNewInput && (
+                                    <button
+                                        onClick={() => setShowNewInput(true)}
+                                        className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors flex items-center gap-1"
+                                    >
+                                        <Plus size={12} />
+                                        New Folder
+                                    </button>
+                                )}
+                            </div>
+
+                            {/* New Folder Input */}
+                            {showNewInput && (
+                                <form onSubmit={handleCreateFolder} className="mb-4">
+                                    <div className="flex gap-2">
+                                        <input
+                                            type="text"
+                                            value={newFolderName}
+                                            onChange={(e) => setNewFolderName(e.target.value)}
+                                            placeholder="Folder name..."
+                                            autoFocus
+                                            disabled={creating}
+                                            className="flex-1 h-9 px-3 bg-zinc-900/50 border border-zinc-800 rounded-sm text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:ring-1 focus:ring-zinc-500"
+                                        />
+                                        <button
+                                            type="submit"
+                                            disabled={creating || !newFolderName.trim()}
+                                            className="px-4 py-2 bg-zinc-100 hover:bg-white text-black text-sm font-medium rounded-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                        >
+                                            {creating? 'Creating...' : 'Create'}
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setShowNewInput(false)
+                                                setNewFolderName('')
+                                            }}
+                                            className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-sm font-medium rounded-sm transition-colors"
+                                        >
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </form>
+                            )}
+
+                            {currentFolder.subfolders && currentFolder.subfolders.length > 0 ? (
                                 <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3">
                                     {currentFolder.subfolders.map((subfolder, index) => (
                                         <FolderCard 
@@ -102,11 +182,23 @@ export default function FolderView(){
                                             folder={subfolder} 
                                             index={index}
                                             viewMode="grid"
+                                            onFolderUpdated={handleFolderUpdate}
                                         />
                                     ))}
                                 </div>
-                            </div>
-                        )}
+                            ) : !showNewInput && (
+                                <div className="flex flex-col items-center justify-center py-8 text-center border border-dashed border-zinc-800 rounded-lg">
+                                    <Folder className="w-12 h-12 text-zinc-600 mb-2" />
+                                    <p className="text-xs text-zinc-500">No subfolders yet</p>
+                                    <button
+                                        onClick={() => setShowNewInput(true)}
+                                        className="mt-3 text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-200 px-3 py-1.5 rounded-sm transition-colors"
+                                    >
+                                        Create Folder
+                                    </button>
+                                </div>
+                            )}
+                        </div>
 
                         {/* Files Section */}
                         <div>
@@ -123,9 +215,7 @@ export default function FolderView(){
                             ) : (
                                 <div className="flex flex-col items-center justify-center py-12 text-center border border-dashed border-zinc-800 rounded-lg">
                                     <div className="w-16 h-16 bg-zinc-900 rounded-full flex items-center justify-center mb-4 border border-zinc-800">
-                                        <svg className="w-8 h-8 text-zinc-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                                        </svg>
+                                        <File />
                                     </div>
                                     <h3 className="text-sm font-medium text-zinc-300 mb-1">No files yet</h3>
                                     <p className="text-xs text-zinc-500 max-w-sm mb-4">
