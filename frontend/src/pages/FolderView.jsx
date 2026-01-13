@@ -5,48 +5,9 @@ import LeftSideBar from '../components/dashboard/LeftSidebar'
 import FolderCard from '../components/dashboard/FolderCard'
 import FileCard from '../components/dashboard/FileCard'
 import MainHeader from '../components/dashboard/MainHeader'
-import { FOLDER_COLORS } from '../constants/colorPalettes.js'
 import { formatDate, formatPath } from '../utils/formatData.js'
 import { Plus, Folder } from 'lucide-react'
-
-function FolderViewSkeleton(){
-    return (
-        <div className="flex-1 overflow-y-auto p-6 relative">
-            <div className="absolute inset-0 bg-grid opacity-[0.03] pointer-events-none"></div>
-            
-            {/* Header skeleton */}
-            <div className="mb-8">
-                <div className="flex items-center gap-3 mb-2">
-                    <div className="w-10 h-10 bg-zinc-800 rounded-lg animate-pulse"></div>
-                    <div className="space-y-2">
-                        <div className="h-6 w-48 bg-zinc-800 rounded animate-pulse"></div>
-                        <div className="h-3 w-64 bg-zinc-800/50 rounded animate-pulse"></div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Subfolders skeleton */}
-            <div className="mb-6">
-                <div className="h-4 w-32 bg-zinc-800 rounded animate-pulse mb-3"></div>
-                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3">
-                    {[...Array(3)].map((_,i) => (
-                        <FolderCard key={i} loading />
-                    ))}
-                </div>
-            </div>
-
-            {/* Files skeleton */}
-            <div>
-                <div className="h-4 w-24 bg-zinc-800 rounded animate-pulse mb-3"></div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                    {[...Array(3)].map((_, i) => (
-                        <FileCard key={i} loading />
-                    ))}
-                </div>
-            </div>
-        </div>
-    )
-}
+import { ThreeDot } from 'react-loading-indicators'
 
 export default function FolderView(){
     const { folderId } = useParams()
@@ -90,7 +51,9 @@ export default function FolderView(){
                 />
 
                 {loading ? (
-                    <FolderViewSkeleton />
+                    <div className='h-full flex-1 flex items-center justify-center'>
+                        <ThreeDot size='medium' color={'white'}/>
+                    </div>
                 ) : !currentFolder ? (
                     <div className="flex-1 flex items-center justify-center">
                         <div className="text-center">
