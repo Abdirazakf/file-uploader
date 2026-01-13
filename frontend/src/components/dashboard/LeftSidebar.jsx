@@ -67,17 +67,14 @@ export default function LeftSidebar(){
     return (
         <aside className='hidden md:flex flex-col w-64 border-r border-border h-full bg-surface/30 pt-6'>
             {/* Header */}
-            <div className="px-5 mb-8 flex items-center justify-between group cursor-pointer">
+            <Link to={'/'} className="px-5 mb-8 flex items-center justify-between group cursor-pointer">
                 <div className="flex items-center gap-2.5 text-zinc-100 font-semibold tracking-tight text-sm">
                     <div className="w-6 h-6 bg-zinc-100 text-black flex items-center justify-center rounded-sm">
                         <Box size={14} />
                     </div>
                     <span>UR FILES</span>
                 </div>
-                <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                    <ChevronDown size={14} className="text-zinc-500" />
-                </div>
-            </div>
+            </Link>
 
             {/* Navbar */}
             <nav className="flex-1">
