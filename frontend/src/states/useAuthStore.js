@@ -1,5 +1,5 @@
 import {create} from 'zustand'
-import toast from 'react-hot-toast'
+import { showErrorToast, showSuccessToast } from "../components/Toast";
 
 const API = import.meta.env.VITE_NODE_ENV === 'prod' ? '/api' : 'http://localhost:3000/api'
 
@@ -23,7 +23,7 @@ export const useAuthStore = create ((set) => ({
                 loading: false
             })
         } catch (err){
-            toast.error('You are not logged in')
+            showErrorToast('You are not logged in')
             console.error('Auth check failed:', err)
 
             set({
@@ -54,9 +54,9 @@ export const useAuthStore = create ((set) => ({
             const { useFolderStore } = await import('./useFolderStore')
             useFolderStore.getState().reset()
 
-            toast.success('Logged out successfully')
+            showSuccessToast('Logged out successfully')
         } catch (err){
-            toast.error('Failed to logout')
+            showErrorToast('Failed to logout')
             console.error('Logout failed:', err)
         }
     }
