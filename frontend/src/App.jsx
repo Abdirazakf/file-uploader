@@ -8,6 +8,7 @@ import Homepage from './pages/Homepage'
 import SignUp from './pages/SignUp'
 import Login from './pages/Login'
 import FolderView from './pages/FolderView'
+import AllFiles from './pages/AllFiles'
 
 export default function App(){
   const checkAuth = useAuthStore((state) => state.checkAuth)
@@ -42,9 +43,18 @@ export default function App(){
           </AuthRoute>
         } />
 
+        <Route path='/all-files'
+        element={
+          <AuthRoute>
+            <AllFiles />
+          </AuthRoute>
+        } />
+
       </Routes>
 
-      <Toaster />
+      <Toaster
+        reverseOrder={false}
+      />
     </div>
   )
 }
