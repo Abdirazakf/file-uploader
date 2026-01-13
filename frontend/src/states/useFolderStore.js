@@ -70,7 +70,6 @@ export const useFolderStore = create((set, get) => ({
     clearCurrentFolder: () => set({ currentFolder: null }),
 
     createFolder: async (name, parentId = null) => {
-        // Add temp folder
         const tempId = `temp-${Date.now()}`
         const tempFolder = {
             id: tempId,
@@ -80,44 +79,57 @@ export const useFolderStore = create((set, get) => ({
             createdAt: new Date().toISOString()
         }
 
-        // Add to UI immediately
-        set(state => ({
-            folders: [...state.folders, tempFolder]
-        }))
+        if (!parentId) {
+            set(state => ({
+                folders: [...state.folders, tempFolder]
+            }))
+        }
 
         try {
+            const body = { name }
+            if (parentId) {
+                body.parentId = parentId
+            }
+
             const response = await fetch(`${API}/folders`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 credentials: 'include',
-                body: JSON.stringify({ name, parentId })
+                body: JSON.stringify(body)
             })
 
             const results = await response.json()
 
             if (response.ok){
-                // Replace temp folder with real one
-                set(state => ({
-                    folders: state.folders.map(f => f.id === tempId ? results.folder : f),
-                    lastFetch: Date.now()
-                }))
+                // Only update folders array if it's a root folder
+                if (!parentId) {
+                    set(state => ({
+                        folders: state.folders.map(f => f.id === tempId ? results.folder : f),
+                        lastFetch: Date.now()
+                    }))
+                }
                 showSuccessToast('Folder created successfully')
                 return results.folder
             } else {
                 // Remove temp folder on error
-                set(state => ({
-                    folders: state.folders.filter(f => f.id !== tempId)
-                }))
+                if (!parentId) {
+                    set(state => ({
+                        folders: state.folders.filter(f => f.id !== tempId)
+                    }))
+                }
 
-                results.errors.forEach(err => showErrorToast(err.msg))
+                results.errors?.forEach(err => showErrorToast(err.msg))
                 return null
             }
         } catch {
-            set(state => ({
-                folders: state.folders.filter(f => f.id !== tempId)
-            }))
+            // Remove temp folder on error
+            if (!parentId) {
+                set(state => ({
+                    folders: state.folders.filter(f => f.id !== tempId)
+                }))
+            }
             showErrorToast('Failed to create folder')
             return null
         }
@@ -157,7 +169,7 @@ export const useFolderStore = create((set, get) => ({
                 // Rollback on error
                 set({ folders: oldFolders})
 
-                results.errors.forEach(err => showErrorToast(err.msg))
+                results.errors?.forEach(err => showErrorToast(err.msg))
                 return null
             }
         } catch {
@@ -190,7 +202,7 @@ export const useFolderStore = create((set, get) => ({
             } else {
                 // Rollback on error
                 set({ folders: oldFolders })
-                results.errors.forEach(err => showErrorToast(err.msg))
+                results.errors?.forEach(err => showErrorToast(err.msg))
                 return false
             }
         } catch {
