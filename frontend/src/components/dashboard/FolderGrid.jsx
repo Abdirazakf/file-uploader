@@ -2,9 +2,19 @@ import { Link } from "react-router";
 import { useFolders, useFolderStoreLoading } from "../../states/useFolderStore";
 import FolderCard from './FolderCard'
 
-export default function FolderGrid({ viewMode = 'grid' }){
+export default function FolderGrid({ viewMode = 'grid' }) {
     const folders = useFolders()
     const loading = useFolderStoreLoading()
+
+    const getGridClasses = (count) => {
+        if (count === 1) return 'grid grid-cols-1 md:grid-cols-1 gap-4 mb-8'
+        if (count === 2) return 'grid grid-cols-2 md:grid-cols-2 gap-4 mb-8'
+        if (count === 3) return 'grid grid-cols-2 md:grid-cols-3 gap-4 mb-8'
+        if (count === 4) return 'grid grid-cols-2 md:grid-cols-4 gap-4 mb-8'
+        
+        // 5+ folders use full grid
+        return 'grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8'
+    }
 
     if (loading) {
         return (
@@ -16,12 +26,7 @@ export default function FolderGrid({ viewMode = 'grid' }){
                     <div className="h-4 w-16 bg-zinc-800 rounded animate-pulse"></div>
                 </div>
 
-                <div className={
-                    viewMode === 'grid' 
-                        ? 'grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8'
-                        : 'flex flex-col gap-2 mb-8'
-                }>
-                    {/* Show 5 skeleton cards */}
+                <div className={getGridClasses(5)}>
                     {[...Array(5)].map((_, i) => (
                         <FolderCard key={i} loading viewMode={viewMode} />
                     ))}
@@ -30,7 +35,7 @@ export default function FolderGrid({ viewMode = 'grid' }){
         )
     }
 
-    if (folders.length === 0){
+    if (folders.length === 0) {
         return (
             <div className="flex flex-col items-center justify-center py-12 text-center">
                 <div className="w-16 h-16 bg-zinc-900 rounded-full flex items-center justify-center mb-4 border border-zinc-800">
@@ -59,7 +64,7 @@ export default function FolderGrid({ viewMode = 'grid' }){
 
             <div className={
                 viewMode === 'grid' 
-                    ? 'grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8'
+                    ? getGridClasses(folders.length)
                     : 'flex flex-col gap-2 mb-8'
             }>
                 {folders.map((folder, index) => (
