@@ -159,7 +159,7 @@ if (viewMode === 'list'){
 
                     {/* Dropdown Menu */}
                     {showMenu && (
-                        <div className="absolute right-0 top-8 z-50 w-48 bg-zinc-900 border border-zinc-800 rounded-sm shadow-lg py-1">
+                        <div className="absolute right-0 top-8 z-50 w-24 bg-zinc-900 border border-zinc-800 rounded-sm shadow-lg py-1">
                             <button
                                 onClick={(e) => {
                                     e.stopPropagation()
@@ -168,7 +168,7 @@ if (viewMode === 'list'){
                                 }}
                                 className="w-full flex items-center gap-2 px-3 py-2 text-sm text-zinc-300 hover:bg-zinc-800 transition-colors"
                             >
-                                <Edit2 size={14} />
+                                <Edit2 size={8} />
                                 Rename
                             </button>
                             <button
@@ -179,7 +179,7 @@ if (viewMode === 'list'){
                                 }}
                                 className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-400 hover:bg-zinc-800 transition-colors"
                             >
-                                <Trash2 size={14} />
+                                <Trash2 size={8} />
                                 Delete
                             </button>
                         </div>
@@ -209,14 +209,14 @@ if (viewMode === 'list'){
 
                     {/* Dropdown Menu */}
                     {showMenu && (
-                        <div className="absolute right-0 top-8 z-50 w-48 bg-zinc-900 border border-zinc-800 rounded-sm shadow-lg py-1">
+                        <div className="absolute right-0 top-8 z-50 w-36 bg-zinc-900 border border-zinc-800 rounded-sm shadow-lg py-1">
                             <button
                                 onClick={(e) => {
                                     e.stopPropagation()
                                     setShowMenu(false)
                                     setIsRenaming(true)
                                 }}
-                                className="w-full flex items-center gap-2 px-3 py-2 text-sm text-zinc-300 hover:bg-zinc-800 transition-colors"
+                                className="w-full flex items-center gap-2 px-3 py-2 text-xs text-zinc-300 hover:bg-zinc-800 transition-colors"
                             >
                                 <Edit2 size={14} />
                                 Rename
@@ -227,7 +227,7 @@ if (viewMode === 'list'){
                                     setShowMenu(false)
                                     handleDelete()
                                 }}
-                                className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-400 hover:bg-zinc-800 transition-colors"
+                                className="w-full flex items-center gap-2 px-3 py-2 text-xs text-red-400 hover:bg-zinc-800 transition-colors"
                             >
                                 <Trash2 size={14} />
                                 Delete
