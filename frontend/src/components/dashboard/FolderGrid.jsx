@@ -52,7 +52,7 @@ export default function FolderGrid({ viewMode = 'grid' }){
                 <h2 className="text-sm font-semibold text-zinc-200 tracking-tight">
                     Folders
                 </h2>
-                <Link to={'/folders'} className="cursor-pointer text-xs text-zinc-500 hover:text-zinc-300 transition-colors">
+                <Link to={'/folders/all'} className="cursor-pointer text-xs text-zinc-500 hover:text-zinc-300 transition-colors">
                     View all
                 </Link>
             </div>
