@@ -5,6 +5,7 @@ export default function MainHeader({
     breadcrumbs = [{ name: 'Home', path: '/' }],
     viewMode,
     onViewModeChange,
+    setUpload = false,
     onUploadClick,
     actions, // Custom action buttons
 }) {
@@ -71,7 +72,7 @@ export default function MainHeader({
                     </div>
                 )}
 
-                {onUploadClick && (
+                {setUpload && (
                     <button
                         onClick={onUploadClick}
                         className="cursor-pointer hidden sm:flex items-center gap-2 bg-zinc-100 hover:bg-white text-black px-3 py-1.5 rounded-sm text-sm font-medium transition-colors"
