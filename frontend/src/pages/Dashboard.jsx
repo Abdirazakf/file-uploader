@@ -4,6 +4,7 @@ import MainHeader from '../components/dashboard/MainHeader'
 import { useRefetchOnFocus } from '../hooks/useRefetchOnFocus'
 import FileUpload from '../components/dashboard/FileUpload'
 import FolderGrid from '../components/dashboard/FolderGrid'
+import FileGrid from '../components/dashboard/FileGrid'
 
 export default function Dashboard(){
     const [viewMode, setViewMode] = useState('grid')
@@ -39,6 +40,8 @@ export default function Dashboard(){
                     <FileUpload onUpload={handleFileDrop}/>
 
                     <FolderGrid viewMode={viewMode} viewAll/>
+
+                    <FileGrid limit={6} viewAll/>
                 </div>
             </main>
 
