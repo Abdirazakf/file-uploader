@@ -205,6 +205,10 @@ export const useFolderStore = create((set, get) => ({
         await get().fetchFolders(true)
     },
 
+    refreshIndividual: async (folderId) => {
+        await get().fetchFolderById(folderId)
+    },
+
     // Reset store (on logout)
     reset: () => set({
         folders: [],
@@ -229,4 +233,5 @@ export const useUpdateFolder = () => useFolderStore(state => state.updateFolder)
 export const useDeleteFolder = () => useFolderStore(state => state.deleteFolder)
 export const useClearCurrentFolder = () => useFolderStore(state => state.clearCurrentFolder)
 export const useRefreshFolders = () => useFolderStore(state => state.refresh)
+export const useRefreshFolder = () => useFolderStore(state => state.refreshIndividual)
 export const useResetFolderStore = () => useFolderStore(state => state.reset)
