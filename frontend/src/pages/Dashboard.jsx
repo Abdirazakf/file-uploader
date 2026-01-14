@@ -13,10 +13,6 @@ export default function Dashboard(){
 
     useRefetchOnFocus()
 
-    const handleUploadClick = () => {
-        console.log('Test: upload click working')
-    }
-
     const handleFileDrop = async () => {        
         await fetchAllFiles(true)
     }
@@ -33,7 +29,6 @@ export default function Dashboard(){
                     ]}
                     viewMode={viewMode}
                     onViewModeChange={setViewMode}
-                    onUploadClick={handleUploadClick}
                 />
 
                 <div className="flex-1 overflow-y-auto p-6 relative">

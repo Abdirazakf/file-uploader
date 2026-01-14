@@ -8,6 +8,7 @@ import MainHeader from '../components/MainHeader'
 import { formatDate, formatPath } from '../utils/formatData.js'
 import { Plus, Folder, FolderPlus, File } from 'lucide-react'
 import { ThreeDot } from 'react-loading-indicators'
+import FileGrid from '../components/dashboard/FileGrid.jsx'
 
 export default function FolderView(){
     const { folderId } = useParams()
@@ -189,11 +190,7 @@ export default function FolderView(){
                             </h3>
                             
                             {currentFolder.files && currentFolder.files.length > 0 ? (
-                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                                    {currentFolder.files.map((file) => (
-                                        <FileCard key={file.id} file={file} />
-                                    ))}
-                                </div>
+                                <FileGrid viewAl customFiles={currentFolder.files} />
                             ) : (
                                 <div className="flex flex-col items-center justify-center py-12 text-center border border-dashed border-zinc-800 rounded-lg">
                                     <div className="w-16 h-16 bg-zinc-900 rounded-full flex items-center justify-center mb-4 border border-zinc-800">

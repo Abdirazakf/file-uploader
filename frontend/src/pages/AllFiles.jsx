@@ -4,6 +4,7 @@ import LeftSidebar from "../components/LeftSidebar"
 import MainHeader from "../components/MainHeader"
 import { useFiles, useFileStoreLoading, useFetchAllFiles } from "../states/useFileStore"
 import { File } from "lucide-react"
+import FileGrid from "../components/dashboard/FileGrid"
 
 export default function AllFiles() {
     const files = useFiles()
@@ -41,7 +42,7 @@ export default function AllFiles() {
                         <div>
                             <div className="flex items-center justify-between mb-4">
                                 <h2 className="text-sm font-semibold text-zinc-200 tracking-tight">
-                                    Files
+                                    All Files
                                 </h2>
                                 <div className="h-4 w-16 bg-zinc-800 rounded animate-pulse"></div>
                             </div>
@@ -63,16 +64,7 @@ export default function AllFiles() {
                         </div>
                     ) : (
                         <div>
-                            <div className="flex items-center justify-between mb-4">
-                                <h2 className="text-sm font-semibold text-zinc-200 tracking-tight">
-                                    Files
-                                </h2>
-                            </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                                {files.map((file) => (
-                                    <FileCard key={file.id} file={file} />
-                                ))}
-                            </div>
+                            <FileGrid customFiles={files} title="All Files" showCount />
                         </div>
                     )}
                 </div>

@@ -1,22 +1,27 @@
 import { Link } from "react-router"
 import { useFetchAllFiles, useFiles, useFileStoreLoading } from "../../states/useFileStore"
 import FileCard from './FileCard'
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 
-export default function FileGrid({ limit, viewAll = false }) {
-    const allFiles = useFiles()
+export default function FileGrid({ limit, viewAll = false, customFiles = null, title = null, showCount = false }) {
+    const [selectedFile, setSelectedFile] = useState(null)
+    const storeFiles = useFiles()
     const loading = useFileStoreLoading()
     const fetchAllFiles = useFetchAllFiles()
 
+    const allFiles = customFiles !== null ? customFiles : storeFiles
+
     useEffect(() => {
-        fetchAllFiles()
-    }, [fetchAllFiles])
+        if (customFiles === null){
+            fetchAllFiles()
+        }
+    }, [fetchAllFiles, customFiles])
 
-    const files = allFiles
-        .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
-        .slice(0, limit)
+    const files = limit 
+        ? allFiles.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, limit)
+        : allFiles.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
 
-    const getGridClasses = (count) => {
+        const getGridClasses = (count) => {
         if (count === 1) return 'grid grid-cols-1 md:grid-cols-1 gap-4 mb-8'
         if (count === 2) return 'grid grid-cols-2 md:grid-cols-2 gap-4 mb-8'
         if (count === 3) return 'grid grid-cols-2 md:grid-cols-3 gap-4 mb-8'
@@ -30,12 +35,17 @@ export default function FileGrid({ limit, viewAll = false }) {
         await fetchAllFiles(true)
     }
 
+    const handleFileClick = (file) => {
+        setSelectedFile(file)
+        console.log(file.originalName)
+    }
+
     if (loading) {
         return (
             <div>
                 <div className="flex items-center justify-between mb-4">
                     <h2 className="text-sm font-semibold text-zinc-200 tracking-tight">
-                        Recent Files
+                        {title}
                     </h2>
                     <div className="h-4 w-16 bg-zinc-800 rounded animate-pulse"></div>
                 </div>
@@ -68,9 +78,14 @@ export default function FileGrid({ limit, viewAll = false }) {
         <div>
             <div className="flex items-center justify-between mb-4">
                 <h2 className="text-sm font-semibold text-zinc-200 tracking-tight">
-                    Recent Files
+                    {title}
                 </h2>
-                {viewAll && allFiles.length > limit && (
+                {showCount && (
+                    <p className="text-sm text-zinc-500">
+                        {files.length} {files.length === 1 ? 'file' : 'files'} total
+                    </p>
+                )}
+                {viewAll && allFiles.length > (limit || 0) && (
                     <Link to={'/all-files'} className="cursor-pointer text-xs text-zinc-500 hover:text-zinc-300 transition-colors">
                         View all
                     </Link>
@@ -82,6 +97,7 @@ export default function FileGrid({ limit, viewAll = false }) {
                         key={file.id}
                         file={file}
                         onFileUpdate={handleFileUpdate}
+                        onFileClick={handleFileClick}
                     />
                 ))}
             </div>

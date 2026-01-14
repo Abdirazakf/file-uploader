@@ -48,12 +48,8 @@ export default function FileCard({ file, loading = false, onFileUpdate, onFileCl
     const isImage = file.mimeType?.startsWith('image/')
 
     const handleClick = () => {
-        console.log('File clicked:', file.originalName)
-
         if (onFileClick){
             onFileClick(file)
-        } else{
-            window.open(file.url, '_blank')
         }
     }
 
