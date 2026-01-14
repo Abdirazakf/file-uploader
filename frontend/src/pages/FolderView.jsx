@@ -26,9 +26,9 @@ export default function FolderView(){
         }
     }, [folderId, fetchFolderById])
 
-    const handleSubmit = (event) => {
+    const handleUpload = (event) => {
         event.preventDefault()
-        console.log('Uploaded file')
+        console.log('Uploaded file to folder:', folderId)
     }
 
     const handleCreateFolder = async (event) => {
@@ -64,13 +64,6 @@ export default function FolderView(){
                 <FolderPlus size={14} />
                 <span className="hidden sm:inline">New Folder</span>
             </button>
-            <button 
-                onClick={handleSubmit}
-                className="hidden sm:flex items-center gap-2 bg-zinc-100 hover:bg-white text-black px-3 py-1.5 rounded-sm text-sm font-medium transition-colors"
-            >
-                <Plus size={14} />
-                <span>Upload</span>
-            </button>
         </>
     )
 
@@ -82,6 +75,8 @@ export default function FolderView(){
                 <MainHeader
                     breadcrumbs={loading ? [{ name: 'Home', path: '/'}] : breadcrumbs}
                     actions={folderActions}
+                    setUpload
+                    onUploadClick={handleUpload}
                 />
 
                 {loading ? (
@@ -222,7 +217,7 @@ export default function FolderView(){
                                         Upload your first file to this folder
                                     </p>
                                     <button 
-                                        onClick={handleSubmit}
+                                        onClick={handleUpload}
                                         className="text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-200 px-3 py-1.5 rounded-sm transition-colors"
                                     >
                                         Upload File
