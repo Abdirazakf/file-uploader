@@ -1,4 +1,4 @@
-import LeftSidebar from '../components/dashboard/LeftSidebar'
+import LeftSidebar from '../components/LeftSidebar'
 import FolderGrid from '../components/dashboard/FolderGrid'
 import { Plus } from 'lucide-react'
 

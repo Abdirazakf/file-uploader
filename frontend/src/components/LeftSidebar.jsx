@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
-import { useAuthStore } from '../../states/useAuthStore'
+import { useAuthStore } from '../states/useAuthStore'
 import { Link, useLocation } from 'react-router'
-import { Box, ChevronDown, ChevronRight, Folder, FolderOpen, LayoutGrid, MoreHorizontal, Plus, Power } from 'lucide-react'
-import { useFolders, useFetchFolders, useFolderStoreLoading } from '../../states/useFolderStore'
-import { FOLDER_COLORS } from '../../constants/colorPalettes'
-import { showErrorToast, showSuccessToast } from '../Toast'
+import { Box, ChevronDown, ChevronRight, Folder, FolderOpen, LayoutGrid, Plus, Power } from 'lucide-react'
+import { useFolders, useFetchFolders, useFolderStoreLoading } from '../states/useFolderStore'
+import { FOLDER_COLORS } from '../constants/colorPalettes'
+import { showErrorToast, showSuccessToast } from './Toast'
 
 const API = import.meta.env.VITE_NODE_ENV === 'prod' ? '/api' : 'http://localhost:3000/api'
 

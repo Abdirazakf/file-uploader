@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import FileCard from "../components/dashboard/FileCard"
-import LeftSidebar from "../components/dashboard/LeftSidebar"
-import MainHeader from "../components/dashboard/MainHeader"
+import LeftSidebar from "../components/LeftSidebar"
+import MainHeader from "../components/MainHeader"
 import { useFiles, useFileStoreLoading, useFetchAllFiles } from "../states/useFileStore"
 import { File } from "lucide-react"
 

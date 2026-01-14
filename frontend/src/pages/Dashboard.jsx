@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import LeftSidebar from '../components/dashboard/LeftSidebar'
-import MainHeader from '../components/dashboard/MainHeader'
+import LeftSidebar from '../components/LeftSidebar'
+import MainHeader from '../components/MainHeader'
 import { useRefetchOnFocus } from '../hooks/useRefetchOnFocus'
 import FileUpload from '../components/dashboard/FileUpload'
 import FolderGrid from '../components/dashboard/FolderGrid'
