@@ -55,18 +55,6 @@ export default function FolderView(){
     
     const breadcrumbs = formatPath(currentFolder)
 
-    const folderActions = (
-        <>
-            <button 
-                onClick={() => setShowNewInput(true)}
-                className="flex items-center gap-2 bg-transparent border border-zinc-800 text-zinc-300 hover:text-white px-3 py-1.5 rounded-sm text-sm font-medium transition-colors"
-            >
-                <FolderPlus size={14} />
-                <span className="hidden sm:inline">New Folder</span>
-            </button>
-        </>
-    )
-
     return (
         <div className="flex h-screen w-screen overflow-hidden bg-background">
             <LeftSideBar />
@@ -74,7 +62,6 @@ export default function FolderView(){
             <main className="flex-1 flex flex-col h-full bg-background relative overflow-hidden">
                 <MainHeader
                     breadcrumbs={loading ? [{ name: 'Home', path: '/'}] : breadcrumbs}
-                    actions={folderActions}
                     setUpload
                     onUploadClick={handleUpload}
                 />
