@@ -21,13 +21,8 @@ export default function FileGrid({ limit, viewAll = false, customFiles = null, t
         ? allFiles.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, limit)
         : allFiles.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
 
-        const getGridClasses = (count) => {
-        if (count === 1) return 'grid grid-cols-1 md:grid-cols-1 gap-4 mb-8'
-        if (count === 2) return 'grid grid-cols-2 md:grid-cols-2 gap-4 mb-8'
-        if (count === 3) return 'grid grid-cols-2 md:grid-cols-3 gap-4 mb-8'
-        if (count === 4) return 'grid grid-cols-2 md:grid-cols-4 gap-4 mb-8'
-        
-        // 5+ files use full grid
+    const getGridClasses = () => {
+        // Mobile: 1 col, Tablet: 2-3 cols, Desktop: 4-5 cols
         return 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mb-8'
     }
 
