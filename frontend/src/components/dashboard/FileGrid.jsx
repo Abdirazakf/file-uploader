@@ -20,8 +20,8 @@ export default function FileGrid({ limit, viewAll = false }) {
         if (count === 1) return 'grid grid-cols-1 md:grid-cols-1 gap-4 mb-8'
         if (count === 2) return 'grid grid-cols-2 md:grid-cols-2 gap-4 mb-8'
         if (count === 3) return 'grid grid-cols-2 md:grid-cols-3 gap-4 mb-8'
-        
         if (count === 4) return 'grid grid-cols-2 md:grid-cols-4 gap-4 mb-8'
+        
         // 5+ files use full grid
         return 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mb-8'
     }
