@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { Link } from "react-router"
-import { Folder, MoreVertical, Edit2, Trash2 } from "lucide-react"
+import { Folder, EllipsisVertical, Edit2, Trash2 } from "lucide-react"
 import { FOLDER_COLORS } from "../../constants/colorPalettes"
 import { useDeleteFolder, useUpdateFolder } from "../../states/useFolderStore"
 
@@ -119,11 +119,11 @@ if (viewMode === 'list'){
                     <Folder size={20} className={color} />
                     <div className="flex-1 min-w-0">
                         {isRenaming ? (
-                            <form onSubmit={handleRename} onClick={(e) => e.stopPropagation()}>
+                            <form onSubmit={handleRename} onClick={(event) => event.stopPropagation()}>
                                 <input
                                     type="text"
                                     value={newName}
-                                    onChange={(e) => setNewName(e.target.value)}
+                                    onChange={(event) => setNewName(event.target.value)}
                                     onBlur={handleRename}
                                     autoFocus
                                     className="w-full h-7 px-2 bg-zinc-900 border border-zinc-700 rounded-sm text-sm text-zinc-100 focus:outline-none focus:ring-1 focus:ring-zinc-500"
@@ -147,22 +147,22 @@ if (viewMode === 'list'){
                 {/* Context Menu Button */}
                 <div className="relative" ref={menuRef}>
                     <button
-                        onClick={(e) => {
-                            e.preventDefault()
-                            e.stopPropagation()
+                        onClick={(event) => {
+                            event.preventDefault()
+                            event.stopPropagation()
                             setShowMenu(!showMenu)
                         }}
                         className="opacity-0 group-hover:opacity-100 p-1 hover:bg-zinc-800 rounded transition-opacity text-zinc-400"
                     >
-                        <MoreVertical size={14} />
+                        <EllipsisVertical size={14} />
                     </button>
 
                     {/* Dropdown Menu */}
                     {showMenu && (
                         <div className="absolute right-0 top-8 z-50 w-24 bg-zinc-900 border border-zinc-800 rounded-sm shadow-lg py-1">
                             <button
-                                onClick={(e) => {
-                                    e.stopPropagation()
+                                onClick={(event) => {
+                                    event.stopPropagation()
                                     setShowMenu(false)
                                     setIsRenaming(true)
                                 }}
@@ -172,8 +172,8 @@ if (viewMode === 'list'){
                                 Rename
                             </button>
                             <button
-                                onClick={(e) => {
-                                    e.stopPropagation()
+                                onClick={(event) => {
+                                    event.stopPropagation()
                                     setShowMenu(false)
                                     handleDelete()
                                 }}
@@ -197,22 +197,22 @@ if (viewMode === 'list'){
                 {/* Context Menu Button */}
                 <div className="relative" ref={menuRef}>
                     <button 
-                        onClick={(e) => {
-                            e.preventDefault()
-                            e.stopPropagation()
+                        onClick={(event) => {
+                            event.preventDefault()
+                            event.stopPropagation()
                             setShowMenu(!showMenu)
                         }}
                         className="opacity-0 group-hover:opacity-100 p-1 hover:bg-zinc-800 rounded transition-opacity text-zinc-400 z-10"
                     >
-                        <MoreVertical size={14} />
+                        <EllipsisVertical size={14} />
                     </button>
 
                     {/* Dropdown Menu */}
                     {showMenu && (
                         <div className="absolute right-0 top-8 z-50 w-36 bg-zinc-900 border border-zinc-800 rounded-sm shadow-lg py-1">
                             <button
-                                onClick={(e) => {
-                                    e.stopPropagation()
+                                onClick={(event) => {
+                                    event.stopPropagation()
                                     setShowMenu(false)
                                     setIsRenaming(true)
                                 }}
@@ -222,8 +222,8 @@ if (viewMode === 'list'){
                                 Rename
                             </button>
                             <button
-                                onClick={(e) => {
-                                    e.stopPropagation()
+                                onClick={(event) => {
+                                    event.stopPropagation()
                                     setShowMenu(false)
                                     handleDelete()
                                 }}
@@ -238,11 +238,11 @@ if (viewMode === 'list'){
             </div>
 
             {isRenaming ? (
-                <form onSubmit={handleRename} onClick={(e) => e.stopPropagation()}>
+                <form onSubmit={handleRename} onClick={(event) => event.stopPropagation()}>
                     <input
                         type="text"
                         value={newName}
-                        onChange={(e) => setNewName(e.target.value)}
+                        onChange={(event) => setNewName(event.target.value)}
                         onBlur={handleRename}
                         autoFocus
                         className="w-full h-8 px-2 bg-zinc-900 border border-zinc-700 rounded-sm text-sm text-zinc-100 focus:outline-none focus:ring-1 focus:ring-zinc-500"
