@@ -43,7 +43,6 @@ export default function MainHeader({
 
             {/* Right Side Actions */}
             <div className="flex items-center gap-3">
-                {/* Custom Actions (for FolderView: Share, New, etc) */}
                 {actions && actions}
 
                 {/* View Mode Toggle */}

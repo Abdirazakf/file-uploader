@@ -1,8 +1,8 @@
-import { useEffect } from "react"
+import { useEffect, useRef, useState } from "react"
 import FileCard from "../components/dashboard/FileCard"
 import LeftSidebar from "../components/LeftSidebar"
 import MainHeader from "../components/MainHeader"
-import { useFiles, useFileStoreLoading, useFetchAllFiles } from "../states/useFileStore"
+import { useFiles, useFileStoreLoading, useFetchAllFiles, useUploadMultipleFiles, useFileUploading } from "../states/useFileStore"
 import { File } from "lucide-react"
 import FileGrid from "../components/dashboard/FileGrid"
 
@@ -10,19 +10,60 @@ export default function AllFiles() {
     const files = useFiles()
     const loading = useFileStoreLoading()
     const fetchAllFiles = useFetchAllFiles()
+    const uploadFiles = useUploadMultipleFiles()
+    const uploading = useFileUploading()
+
+    const [selectedFile, setSelectedFile] = useState(null)
+    const fileInputRef = useRef(null)
 
     // Fetch files on mount
     useEffect(() => {
         fetchAllFiles()
     }, [fetchAllFiles])
 
+    const handleUpload = () => {
+        fileInputRef.current?.click()
+    }
+
+    const handleFileSelect = async (e) => {
+        const selectedFile = Array.from(e.target.files || [])
+        
+        if (selectedFile.length > 0) {
+            await uploadFiles(selectedFile, null)
+            
+            await fetchAllFiles(true)
+            
+            if (fileInputRef.current) {
+                fileInputRef.current.value = ''
+            }
+        }
+    }
+
+    const handleFileClick = (file) => {
+        setSelectedFile(file)
+    }
+
+    const handleCloseSidebar = () => {
+        setSelectedFile(null)
+    }
+
     return (
         <div className="flex h-screen w-screen overflow-hidden bg-background">
             <LeftSidebar />
 
+            {/* Hidden file input */}
+            <input
+                ref={fileInputRef}
+                type="file"
+                multiple
+                onChange={handleFileSelect}
+                className="hidden"
+                disabled={uploading}
+            />
+
             <main className="flex-1 flex flex-col h-full bg-background relative overflow-hidden">
                 {/* Header */}
-                <MainHeader />
+                <MainHeader setUpload onUploadClick={handleUpload}/>
 
                 {/* Content */}
                 <div className="flex-1 overflow-y-auto p-6 relative">
