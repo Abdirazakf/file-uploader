@@ -2,39 +2,9 @@ import { useEffect, useRef, useState } from 'react'
 import { File, EllipsisVertical, FileImage, Trash2, FileText, Video, Music, Archive } from 'lucide-react'
 import { formatDate, formatFileSize } from '../../utils/formatData.js'
 import { useDeleteFile } from '../../states/useFileStore.js'
+import { getFileIcon } from '../../utils/getFileIcon.js'
 
-const getFileIcon = (mimeType, fileName) => {
-    if (mimeType){
-        if (mimeType.startsWith('image/')) return { icon: FileImage, color: 'text-purple-400'}
-        if (mimeType.startsWith('video/')) return { icon: Video, color: 'text-pink-400' }
-        if (mimeType.startsWith('audio/')) return { icon: Music, color: 'text-green-400' }
-        if (mimeType === 'application/pdf') return { icon: FileText, color: 'text-red-400' }
-        if (mimeType.startsWith('text/')) return { icon: FileText, color: 'text-blue-400' }
-        if (mimeType.includes('zip') || mimeType.includes('rar') || mimeType.includes('tar')) {
-            return { icon: Archive, color: 'text-yellow-400' }
-        }
-    }
-
-    // Fallback to file extensions
-    const ext = fileName.split('.').pop().toLowerCase()
-
-    const imageExts = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp', 'ico']
-    const videoExts = ['mp4', 'mov', 'avi', 'mkv', 'webm', 'flv', 'wmv']
-    const audioExts = ['mp3', 'wav', 'ogg', 'flac', 'm4a', 'aac']
-    const docExts = ['pdf', 'doc', 'docx', 'txt', 'md', 'rtf']
-    const archiveExts = ['zip', 'rar', '7z', 'tar', 'gz', 'bz2']
-
-    if (imageExts.includes(ext)) return { icon: FileImage, color: 'text-purple-400' }
-    if (videoExts.includes(ext)) return { icon: Video, color: 'text-pink-400' }
-    if (audioExts.includes(ext)) return { icon: Music, color: 'text-green-400' }
-    if (docExts.includes(ext)) return { icon: FileText, color: 'text-blue-400' }
-    if (archiveExts.includes(ext)) return { icon: Archive, color: 'text-yellow-400' }
-
-    // Last resort
-    return { icon: File, color: 'text-zinc-400'}
-}
-
-export default function FileCard({ file, loading = false, onFileUpdate }){
+export default function FileCard({ file, loading = false, onFileUpdate, onFileClick }){
     const [isDeleting, setIsDeleting] = useState(false)
     const [showMenu, setShowMenu] = useState(false)
 
@@ -78,8 +48,13 @@ export default function FileCard({ file, loading = false, onFileUpdate }){
     const isImage = file.mimeType?.startsWith('image/')
 
     const handleClick = () => {
-        console.log('File clicked:', file.id)
-        window.open(file.url, '_blank')
+        console.log('File clicked:', file.originalName)
+
+        if (onFileClick){
+            onFileClick(file)
+        } else{
+            window.open(file.url, '_blank')
+        }
     }
 
     const handleDelete = async () => {
@@ -100,6 +75,7 @@ export default function FileCard({ file, loading = false, onFileUpdate }){
     return (
         <div 
             className={`group relative bg-surface border border-zinc-800/60 hover:border-zinc-600 rounded-sm overflow-hidden cursor-pointer transition-all duration-200 hover:shadow-xl hover:scale-[1.01] ${isDeleting ? 'opacity-60 pointer-events-none' : ''}`}
+            onClick={handleClick}
         >
             <div className="aspect-4/3 bg-zinc-900 relative overflow-hidden flex items-center justify-center">
                 {isImage ? (
