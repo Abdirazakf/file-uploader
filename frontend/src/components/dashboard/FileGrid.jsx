@@ -1,10 +1,16 @@
 import { Link } from "react-router"
-import { useFiles, useFileStoreLoading } from "../../states/useFileStore"
+import { useFetchAllFiles, useFiles, useFileStoreLoading } from "../../states/useFileStore"
 import FileCard from './FileCard'
+import { useEffect } from "react"
 
 export default function FileGrid({ limit, viewAll = false }) {
     const allFiles = useFiles()
     const loading = useFileStoreLoading()
+    const fetchAllFiles = useFetchAllFiles()
+
+    useEffect(() => {
+        fetchAllFiles()
+    }, [fetchAllFiles])
 
     const files = allFiles
         .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
@@ -18,6 +24,10 @@ export default function FileGrid({ limit, viewAll = false }) {
         if (count === 4) return 'grid grid-cols-2 md:grid-cols-4 gap-4 mb-8'
         // 5+ files use full grid
         return 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mb-8'
+    }
+
+    const handleFileUpdate = async () => {
+        await fetchAllFiles(true)
     }
 
     if (loading) {
@@ -71,6 +81,7 @@ export default function FileGrid({ limit, viewAll = false }) {
                     <FileCard
                         key={file.id}
                         file={file}
+                        onFileUpdate={handleFileUpdate}
                     />
                 ))}
             </div>
