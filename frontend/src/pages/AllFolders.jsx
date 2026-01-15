@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import LeftSidebar from '../components/LeftSidebar'
 import FolderGrid from '../components/dashboard/FolderGrid'
-import { Plus } from 'lucide-react'
+import { Plus, Power } from 'lucide-react'
 import { useCreateFolder } from '../states/useFolderStore'
 import { Link } from 'react-router'
+import { useAuthStore } from '../states/useAuthStore'
 
 export default function AllFolders(){
+    const { logoutUser } = useAuthStore()
     const [newFolderName, setNewFolderName] = useState('')
     const [creating, setCreating] = useState(false)
     const [showInput, setShowInput] = useState(false)
@@ -45,6 +47,14 @@ export default function AllFolders(){
                         >
                             <Plus size={14} />
                             <span>Create</span>
+                        </button>
+                    </div>
+                    <div className="flex sm:hidden">
+                        <button 
+                            onClick={logoutUser}
+                            className="group-hover:opacity-100 transition-opacity cursor-pointer"
+                        >
+                            <Power size={14} className="text-zinc-600 hover:text-zinc-300" />
                         </button>
                     </div>
                 </header>

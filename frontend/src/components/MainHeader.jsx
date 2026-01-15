@@ -1,5 +1,6 @@
 import { Link } from 'react-router'
-import { LayoutGrid, List, Slash, UploadCloud } from 'lucide-react'
+import { useAuthStore } from '../states/useAuthStore'
+import { LayoutGrid, List, Power, Slash, UploadCloud } from 'lucide-react'
 
 export default function MainHeader({
     breadcrumbs = [{ name: 'Home', path: '/' }],
@@ -9,16 +10,35 @@ export default function MainHeader({
     onUploadClick,
     actions, // Custom action buttons
 }) {
+
+    const { logoutUser } = useAuthStore()
+
+    const getDisplayBreadcrumbs = () => {
+        const maxBreadcrumbs = 3
+        
+        if (breadcrumbs.length <= maxBreadcrumbs) {
+            return breadcrumbs
+        }
+
+        return [
+            breadcrumbs[0], // Home
+            { name: '...', path: null, isEllipsis: true }, // Ellipsis
+            breadcrumbs[breadcrumbs.length - 1] // Current page
+        ]
+    }
+
+    const displayBreadcrumbs = getDisplayBreadcrumbs()
+
     return (
         <header className="h-14 border-b border-border flex items-center justify-between px-6 bg-background/95 backdrop-blur-sm z-20">
             {/* Breadcrumb */}
             <div className="flex items-center gap-2 text-sm">
-                {breadcrumbs.map((crumb, index) => (
+                {displayBreadcrumbs.map((crumb, index) => (
                     <div key={index} className="flex items-center gap-2">
                         {index > 0 && (
                             <Slash size={12} className='text-zinc-700' />
                         )}
-                        {index === breadcrumbs.length - 1  && breadcrumbs.length !== 1 ? (
+                        {index === displayBreadcrumbs.length - 1  && displayBreadcrumbs.length !== 1 ? (
                             // Last item not clickable
                             <span className="text-zinc-200 font-medium flex items-center gap-1">
                                 {crumb.icon && (
@@ -80,6 +100,15 @@ export default function MainHeader({
                         <span>Upload</span>
                     </button>
                 )}
+            </div>
+
+            <div className="flex sm:hidden">
+                <button 
+                    onClick={logoutUser}
+                    className="group-hover:opacity-100 transition-opacity cursor-pointer"
+                >
+                    <Power size={14} className="text-zinc-600 hover:text-zinc-300" />
+                </button>
             </div>
         </header>
     )
