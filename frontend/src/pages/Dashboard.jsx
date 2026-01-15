@@ -56,7 +56,6 @@ export default function Dashboard(){
                 </div>
             </main>
 
-            {/* Right sidebar (details panel) */}
             {selectedFile && (
                 <RightSidebar file={selectedFile} onClose={handleCloseSidebar} onFileUpdate={handleFileUpdate} />
             )}

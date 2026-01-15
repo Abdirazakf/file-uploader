@@ -9,6 +9,7 @@ import { Plus, Folder, FolderPlus, File } from 'lucide-react'
 import { ThreeDot } from 'react-loading-indicators'
 import FileGrid from '../components/dashboard/FileGrid.jsx'
 import { useUploadMultipleFiles } from '../states/useFileStore.js'
+import RightSidebar from '../components/RightSidebar.jsx'
 
 export default function FolderView(){
     const { folderId } = useParams()
@@ -223,7 +224,7 @@ export default function FolderView(){
                             </h3>
                             
                             {currentFolder.files && currentFolder.files.length > 0 ? (
-                                <FileGrid viewAll customFiles={currentFolder.files} onFileDelete={handleFolderUpdate} />
+                                <FileGrid viewAll customFiles={currentFolder.files} onFileDelete={handleFolderUpdate} onFileClick={handleFileClick}/>
                             ) : (
                                 <div className="flex flex-col items-center justify-center py-12 text-center border border-dashed border-zinc-800 rounded-lg">
                                     <div className="w-16 h-16 bg-zinc-900 rounded-full flex items-center justify-center mb-4 border border-zinc-800">
@@ -245,6 +246,9 @@ export default function FolderView(){
                     </div>
                 )}
             </main>
+            {selectedFile && (
+                <RightSidebar file={selectedFile} onClose={handleCloseSidebar} onFileUpdate={handleFolderUpdate} />
+            )}
         </div>
     )
 }

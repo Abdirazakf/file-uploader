@@ -5,6 +5,7 @@ import MainHeader from "../components/MainHeader"
 import { useFiles, useFileStoreLoading, useFetchAllFiles, useUploadMultipleFiles, useFileUploading } from "../states/useFileStore"
 import { File } from "lucide-react"
 import FileGrid from "../components/dashboard/FileGrid"
+import RightSidebar from "../components/RightSidebar"
 
 export default function AllFiles() {
     const files = useFiles()
@@ -37,6 +38,10 @@ export default function AllFiles() {
                 fileInputRef.current.value = ''
             }
         }
+    }
+
+    const handleFileUpdate = async () => {
+        await fetchAllFiles(true)
     }
 
     const handleFileClick = (file) => {
@@ -105,11 +110,15 @@ export default function AllFiles() {
                         </div>
                     ) : (
                         <div>
-                            <FileGrid customFiles={files} title="All Files" showCount />
+                            <FileGrid customFiles={files} title="All Files" showCount onFileClick={handleFileClick}/>
                         </div>
                     )}
                 </div>
             </main>
+
+            {selectedFile && (
+                <RightSidebar file={selectedFile} onClose={handleCloseSidebar} onFileUpdate={handleFileUpdate} />
+            )}
         </div>
     )
 }
