@@ -18,7 +18,7 @@ export default function MainHeader({
                         {index > 0 && (
                             <Slash size={12} className='text-zinc-700' />
                         )}
-                        {index === breadcrumbs.length - 1 ? (
+                        {index === breadcrumbs.length - 1  && breadcrumbs.length !== 1 ? (
                             // Last item not clickable
                             <span className="text-zinc-200 font-medium flex items-center gap-1">
                                 {crumb.icon && (
