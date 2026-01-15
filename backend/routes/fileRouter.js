@@ -8,11 +8,13 @@ const {
     getFileByID,
     updateFile,
     deleteFile,
+    downloadFile
 } = require('../controllers/fileController')
 
 fileRouter.get('/all', getAllFiles)
 fileRouter.get('/', getRootFiles)
 fileRouter.get('/:id', getFileByID)
+fileRouter.get('/:id/download', downloadFile)
 
 fileRouter.post('/', uploadMiddleware, uploadFile)
 

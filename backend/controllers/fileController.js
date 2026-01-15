@@ -313,3 +313,61 @@ exports.deleteFile = [
         }
     }
 ]
+
+exports.downloadFile = [
+    validateFileID,
+    async (req, res, next) => {
+        const errors = validationResult(req)
+
+        if (!errors.isEmpty()){
+            return res.status(400).json({
+                success: false,
+                errors: errors.array()
+            })
+        }
+
+        try {
+            const { id } = req.params
+            const userId = req.user.id
+
+            const file = await fileDB.getFileById(id, userId)
+
+            if (!file){
+                return res.status(404).json({
+                    success: false,
+                    errors: [{msg: 'File not found'}]
+                })
+            }
+
+            const split = file.url.split('/files/')
+            const path = split[1]
+
+            // Download from private bucket
+            const { data, error } = await supabase
+                .storage
+                .from(process.env.BUCKET_NAME)
+                .download(path)
+
+            if (error){
+                return res.status(500).json({
+                    success: false,
+                    errors: [{msg: 'Failed to download file'}]
+                })
+            }
+
+            // Converts blob to buffer
+            const buffer = Buffer.from(await data.arrayBuffer())
+
+            // Set headers
+            res.setHeader('Content-Type', file.mimeType)
+            res.setHeader('Content-Disposition', `attachment; filename="${encodeURIComponent(file.originalName)}"`)
+            res.setHeader('Content-Length', buffer.length)
+
+            // Send file
+            res.send(buffer)
+        } catch (err){
+            console.error('Download file error:', err)
+            next(err)
+        }
+    }
+]
