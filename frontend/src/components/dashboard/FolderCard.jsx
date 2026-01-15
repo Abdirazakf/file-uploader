@@ -145,7 +145,7 @@ if (viewMode === 'list'){
                     </div>
                 </Link>
                 
-                {/* Context Menu Button */}
+                {/* Context Menu Button - Always visible on mobile */}
                 <div className="relative" ref={menuRef}>
                     <button
                         onClick={(event) => {
@@ -153,7 +153,7 @@ if (viewMode === 'list'){
                             event.stopPropagation()
                             setShowMenu(!showMenu)
                         }}
-                        className="opacity-0 group-hover:opacity-100 p-1 hover:bg-zinc-800 rounded transition-opacity text-zinc-400"
+                        className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 p-1 hover:bg-zinc-800 rounded transition-opacity text-zinc-400"
                     >
                         <EllipsisVertical size={14} />
                     </button>
@@ -191,11 +191,11 @@ if (viewMode === 'list'){
     }
 
     return (
-        <div className={`group relative p-3 bg-zinc-900/30 border border-zinc-800/60 hover:border-zinc-700 hover:bg-zinc-900 hover:shadow-lg rounded-sm transition-all duration-200 ${!isRenaming && 'hover:-translate-y-0.5'} ${isTemp || isDeleting ? 'opacity-60 pointer-events-none' : ''}`}>
+        <div className={`group relative p-3 bg-zinc-900/30 border border-zinc-800/60 hover:border-zinc-700 hover:bg-zinc-900 hover:shadow-lg rounded-sm transition-all duration-200 ${!isRenaming && 'sm:hover:-translate-y-0.5'} ${isTemp || isDeleting ? 'opacity-60 pointer-events-none' : ''}`}>
             <div className="flex items-start justify-between mb-3">
                 <Folder size={20} className={color} />
                 
-                {/* Context Menu Button */}
+                {/* Context Menu Button - Always visible on mobile */}
                 <div className="relative" ref={menuRef}>
                     <button 
                         onClick={(event) => {
@@ -203,7 +203,7 @@ if (viewMode === 'list'){
                             event.stopPropagation()
                             setShowMenu(!showMenu)
                         }}
-                        className="opacity-0 group-hover:opacity-100 p-1 hover:bg-zinc-800 rounded transition-opacity text-zinc-400 z-10"
+                        className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 p-1 hover:bg-zinc-800 rounded transition-opacity text-zinc-400 z-10"
                     >
                         <EllipsisVertical size={14} />
                     </button>

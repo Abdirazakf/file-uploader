@@ -71,7 +71,7 @@ export default function FileCard({ file, loading = false, onFileUpdate, onFileCl
 
     return (
         <div 
-            className={`group relative bg-surface border border-zinc-800/60 hover:border-zinc-600 rounded-sm overflow-hidden cursor-pointer transition-all duration-200 hover:shadow-xl hover:scale-[1.01] ${isDeleting ? 'opacity-60 pointer-events-none' : ''}`}
+            className={`group relative bg-surface border border-zinc-800/60 hover:border-zinc-600 rounded-sm overflow-hidden cursor-pointer transition-all duration-200 sm:hover:shadow-xl sm:hover:scale-[1.01] ${isDeleting ? 'opacity-60 pointer-events-none' : ''}`}
             onClick={handleClick}
         >
             <div className="aspect-4/3 bg-zinc-900 relative overflow-hidden flex items-center justify-center">
@@ -86,7 +86,7 @@ export default function FileCard({ file, loading = false, onFileUpdate, onFileCl
                         <Icon className={`${color} w-16 h-16`} />
                     )}
 
-                {/* Context Menu Button */}
+                {/* Context Menu Button - Always visible on mobile */}
                 <div className="absolute top-2 right-2" ref={menuRef}>
                     <button
                         onClick={(event) => {
@@ -94,7 +94,7 @@ export default function FileCard({ file, loading = false, onFileUpdate, onFileCl
                             event.stopPropagation()
                             setShowMenu(!showMenu)
                         }}
-                        className="opacity-0 group-hover:opacity-100 p-1.5 bg-black/40 hover:bg-black/60 rounded transition-all text-zinc-300 hover:text-white"
+                        className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 p-1.5 bg-black/40 hover:bg-black/60 rounded transition-all text-zinc-300 hover:text-white"
                     >
                         <EllipsisVertical size={14} />
                     </button>
