@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { File, EllipsisVertical, FileImage, Trash2, FileText, Video, Music, Archive } from 'lucide-react'
-import { formatDate, formatFileSize } from '../../utils/formatData.js'
+import { EllipsisVertical, Trash2 } from 'lucide-react'
+import { formatDate, formatSize } from '../../utils/formatData.js'
 import { useDeleteFile } from '../../states/useFileStore.js'
 import { getFileIcon } from '../../utils/getFileIcon.js'
 
@@ -43,7 +43,7 @@ export default function FileCard({ file, loading = false, onFileUpdate, onFileCl
     }
 
     const { icon: Icon, color} = getFileIcon(file.mimeType, file.originalName)
-    const size = formatFileSize(file.size)
+    const size = formatSize(file.size)
     const date = formatDate(file.createdAt)
     const isImage = file.mimeType?.startsWith('image/')
 

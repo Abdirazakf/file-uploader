@@ -3,6 +3,7 @@ import { Link } from "react-router"
 import { Folder, EllipsisVertical, Edit2, Trash2 } from "lucide-react"
 import { FOLDER_COLORS } from "../../constants/colorPalettes"
 import { useDeleteFolder, useUpdateFolder } from "../../states/useFolderStore"
+import { formatSize } from "../../utils/formatData"
 
 export default function FolderCard({ folder, index, viewMode = 'grid', loading = false, onFolderUpdate}){
     const [showMenu, setShowMenu] = useState(false)
@@ -109,7 +110,7 @@ export default function FolderCard({ folder, index, viewMode = 'grid', loading =
     }
 
     // Placeholder size until logic implemented on backend
-    const size = '0 MB'
+    const size = formatSize(folder.totalSize)
     const itemText = getItemText()
 
 if (viewMode === 'list'){
