@@ -150,6 +150,40 @@ export const useFileStore = create((set, get) => ({
         }
     },
 
+    downloadFile: async (fileId, fileName) => {
+        try {
+            const response = await fetch(`${API}/files/${fileId}/download`, {
+                method: 'GET',
+                credentials: 'include'
+            })
+
+            if (!response.ok) {
+                showErrorToast('Failed to download file')
+                return false
+            }
+
+            const blob = await response.blob()
+
+            // Create temporary download link
+            const url = window.URL.createObjectURL(blob)
+            const a = document.createElement('a')
+            a.href = url
+            a.download = fileName
+            document.body.appendChild(a)
+            a.click()
+
+            // Cleanup
+            document.body.removeChild(a)
+            window.URL.revokeObjectURL(url)
+
+            showSuccessToast(`${fileName} downloaded successfully`)
+            return true
+        } catch {
+            showErrorToast('Failed to download file')
+            return false
+        }
+    },
+
     clearCurrentFile: () => set({ currentFile: null }),
 
     // Force refresh
@@ -183,6 +217,7 @@ export const useUploadMultipleFiles = () => useFileStore(state => state.uploadMu
 export const useFetchFileById = () => useFileStore(state => state.fetchFileById)
 export const useFetchAllFiles = () => useFileStore(state => state.fetchAllFiles)
 export const useDeleteFile = () => useFileStore(state => state.deleteFile)
+export const useDownloadFile = () => useFileStore(state => state.downloadFile)
 export const useClearCurrentFile = () => useFileStore(state => state.clearCurrentFile)
 export const useRefreshFiles = () => useFileStore(state => state.refresh)
 export const useResetFileStore = () => useFileStore(state => state.reset)
