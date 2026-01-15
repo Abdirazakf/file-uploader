@@ -1,11 +1,12 @@
 import { X, Download, Trash2 } from 'lucide-react'
 import { getFileIcon, getFileType } from '../utils/getFileIcon'
 import { formatDate, formatSize } from '../utils/formatData'
-import { useDeleteFile } from '../states/useFileStore'
+import { useDeleteFile, useDownloadFile } from '../states/useFileStore'
 import { useState } from 'react'
 
 export default function RightSidebar({ file, onClose, onFileUpdate }) {
     const [isDeleting, setIsDeleting] = useState(false)
+    const downloadFile = useDownloadFile()
     const deleteFile = useDeleteFile()
 
     if (!file) return null
@@ -17,14 +18,7 @@ export default function RightSidebar({ file, onClose, onFileUpdate }) {
     const isImage = file.mimeType?.startsWith('image/')
 
     const handleDownload = () => {
-        // Create a temporary anchor element to trigger download
-        const link = document.createElement('a')
-        link.href = file.url
-        link.download = file.originalName
-        link.target = '_blank'
-        document.body.appendChild(link)
-        link.click()
-        document.body.removeChild(link)
+        downloadFile(file.id, file.originalName)
     }
 
     const handleDelete = async () => {
@@ -86,7 +80,7 @@ export default function RightSidebar({ file, onClose, onFileUpdate }) {
                 {/* File Metadata */}
                 <div className="space-y-6">
                     <div>
-                        <h3 className="text-lg font-medium text-zinc-100 mb-1 leading-tight tracking-tight break-words">
+                        <h3 className="text-lg font-medium text-zinc-100 mb-1 leading-tight tracking-tight wrap-break-word">
                             {file.originalName}
                         </h3>
                     </div>
@@ -115,10 +109,10 @@ export default function RightSidebar({ file, onClose, onFileUpdate }) {
             </div>
 
             {/* Action Footer */}
-            <div className="p-4 border-t border-border bg-surface/50 space-y-2">
+            <div className="p-4 border-t border-border bg-surface/50 space-y-4">
                 <button
                     onClick={handleDownload}
-                    className="cursor-pointer w-full py-2 bg-zinc-100 hover:bg-white text-black text-xs font-medium rounded-[2px] transition-colors shadow-sm flex items-center justify-center gap-2"
+                    className="cursor-pointer w-full py-2 bg-zinc-100 hover:bg-white text-black text-xs font-medium rounded-xs transition-colors shadow-sm flex items-center justify-center gap-2"
                 >
                     <Download size={14} />
                     Download
@@ -126,7 +120,7 @@ export default function RightSidebar({ file, onClose, onFileUpdate }) {
                 <button
                     onClick={handleDelete}
                     disabled={isDeleting}
-                    className="cursor-pointer w-full py-2 bg-transparent hover:bg-red-500/10 hover:border-red-500/30 text-zinc-400 hover:text-red-500 text-xs font-medium rounded-[2px] transition-colors border border-zinc-800 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="cursor-pointer w-full py-2 bg-transparent hover:bg-red-500/10 hover:border-red-500/30 text-zinc-400 hover:text-red-500 text-xs font-medium rounded-xs transition-colors border border-zinc-800 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     <Trash2 size={14} />
                     {isDeleting ? 'Deleting...' : 'Delete'}
