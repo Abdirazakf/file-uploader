@@ -7,6 +7,7 @@ import { getFileIcon } from '../../utils/getFileIcon.js'
 export default function FileCard({ file, loading = false, onFileUpdate, onFileClick }){
     const [isDeleting, setIsDeleting] = useState(false)
     const [showMenu, setShowMenu] = useState(false)
+    const [imageError, setImageError] = useState(false)
 
     const menuRef = useRef(null)
     const deleteFile = useDeleteFile()
@@ -74,18 +75,16 @@ export default function FileCard({ file, loading = false, onFileUpdate, onFileCl
             onClick={handleClick}
         >
             <div className="aspect-4/3 bg-zinc-900 relative overflow-hidden flex items-center justify-center">
-                {isImage ? (
-                    <img 
-                        src={file.url} 
-                        alt={file.originalName}
-                        className="w-full h-full object-cover"
-                        onError={(event) => {
-                            event.target.style.display = 'none'
-                        }}
-                    />
-                ) : (
-                    <Icon className='text-zinc-600' size={32} />
-                )}
+                    {isImage && !imageError ? (
+                        <img 
+                            src={file.url} 
+                            alt={file.originalName}
+                            className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+                            onError={() => setImageError(true)}
+                        />
+                    ) : (
+                        <Icon className={`${color} w-16 h-16`} />
+                    )}
 
                 {/* Context Menu Button */}
                 <div className="absolute top-2 right-2" ref={menuRef}>
