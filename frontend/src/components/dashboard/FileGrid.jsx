@@ -1,10 +1,9 @@
 import { Link } from "react-router"
 import { useFetchAllFiles, useFiles, useFileStoreLoading } from "../../states/useFileStore"
 import FileCard from './FileCard'
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 
-export default function FileGrid({ limit, viewAll = false, customFiles = null, title = null, showCount = false, onFileDelete }) {
-    const [selectedFile, setSelectedFile] = useState(null)
+export default function FileGrid({ limit, viewAll = false, customFiles = null, title = null, showCount = false, onFileDelete, onFileClick }) {
     const storeFiles = useFiles()
     const loading = useFileStoreLoading()
     const fetchAllFiles = useFetchAllFiles()
@@ -32,11 +31,6 @@ export default function FileGrid({ limit, viewAll = false, customFiles = null, t
         } else {
             await fetchAllFiles(true)
         }
-    }
-
-    const handleFileClick = (file) => {
-        setSelectedFile(file)
-        console.log(file.originalName)
     }
 
     if (loading) {
@@ -96,7 +90,7 @@ export default function FileGrid({ limit, viewAll = false, customFiles = null, t
                         key={file.id}
                         file={file}
                         onFileUpdate={handleFileUpdate}
-                        onFileClick={handleFileClick}
+                        onFileClick={onFileClick}
                     />
                 ))}
             </div>
