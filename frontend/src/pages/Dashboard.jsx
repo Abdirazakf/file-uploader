@@ -6,14 +6,28 @@ import FileUpload from '../components/dashboard/FileUpload'
 import FolderGrid from '../components/dashboard/FolderGrid'
 import FileGrid from '../components/dashboard/FileGrid'
 import { useFetchAllFiles } from '../states/useFileStore'
+import RightSidebar from '../components/RightSidebar'
 
 export default function Dashboard(){
     const [viewMode, setViewMode] = useState('grid')
+    const [selectedFile, setSelectedFile] = useState(null)
     const fetchAllFiles = useFetchAllFiles()
 
     useRefetchOnFocus()
 
     const handleFileDrop = async () => {        
+        await fetchAllFiles(true)
+    }
+
+    const handleFileClick = (file) => {
+        setSelectedFile(file)
+    }
+
+    const handleCloseSidebar = () => {
+        setSelectedFile(null)
+    }
+
+    const handleFileUpdate = async () => {
         await fetchAllFiles(true)
     }
 
@@ -38,11 +52,14 @@ export default function Dashboard(){
 
                     <FolderGrid viewMode={viewMode} viewAll/>
 
-                    <FileGrid limit={6} viewAll/>
+                    <FileGrid limit={6} viewAll onFileClick={handleFileClick}/>
                 </div>
             </main>
 
             {/* Right sidebar (details panel) */}
+            {selectedFile && (
+                <RightSidebar file={selectedFile} onClose={handleCloseSidebar} onFileUpdate={handleFileUpdate} />
+            )}
         </div>
     )
 }
