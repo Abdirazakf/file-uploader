@@ -6,6 +6,7 @@ import { useState } from 'react'
 
 export default function RightSidebar({ file, onClose, onFileUpdate }) {
     const [isDeleting, setIsDeleting] = useState(false)
+    const [imageError, setImageError] = useState(false)
     const downloadFile = useDownloadFile()
     const deleteFile = useDeleteFile()
 
@@ -56,21 +57,12 @@ export default function RightSidebar({ file, onClose, onFileUpdate }) {
             <div className="flex-1 overflow-y-auto p-4">
                 {/* File Preview */}
                 <div className="w-full aspect-video bg-zinc-900 rounded-sm border border-zinc-800 flex items-center justify-center mb-6 relative overflow-hidden group">
-                    {isImage ? (
+                    {isImage && !imageError ? (
                         <img 
                             src={file.url} 
                             alt={file.originalName}
                             className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
-                            onError={(e) => {
-                                e.target.style.display = 'none'
-                                e.target.parentElement.innerHTML = `
-                                    <div class="flex items-center justify-center w-full h-full">
-                                        <svg class="w-16 h-16 text-zinc-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                                        </svg>
-                                    </div>
-                                `
-                            }}
+                            onError={() => setImageError(true)}
                         />
                     ) : (
                         <Icon className={`${color} w-16 h-16`} />
