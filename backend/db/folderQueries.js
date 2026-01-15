@@ -79,6 +79,7 @@ async function getUserRootFolders (userId){
 
     for (const folder of folders) {
         folder.path = [{ id: folder.id, name: folder.name }]
+        folder.totalSize = await calculateSize(folder.id, userId)
     }
 
     return folders
@@ -134,6 +135,8 @@ async function getFolderByID (id, userId) {
 
     folder.path = await buildPath(id, userId)
 
+    folder.totalSize = await calculateSize(id, userId)
+
     return folder
 }
 
@@ -177,6 +180,37 @@ async function checkFolderOwner (id, userId){
     return folder !== null
 }
 
+async function calculateSize(folderId, userId,){
+    const files = await prisma.file.findMany({
+        where: {
+            folderId,
+            userId
+        },
+        select: {
+            size: true
+        }
+    })
+
+    let totalSize = files.reduce((sum, file) => sum + BigInt(file.size), BigInt(0))
+
+    const subfolders = await prisma.folder.findMany({
+        where: {
+            parentId: folderId,
+            userId
+        },
+        select: {
+            id: true
+        }
+    })
+
+    for (const subfolder of subfolders){
+        const size = await calculateSize(subfolder.id, userId)
+        totalSize += BigInt(size)
+    }
+
+    return totalSize.toString()
+}
+
 module.exports = {
     createFolder,
     getUserRootFolders,
@@ -184,5 +218,6 @@ module.exports = {
     updateFolder,
     deleteFolder,
     checkFolderOwner,
-    buildPath
+    buildPath,
+    calculateSize
 }
