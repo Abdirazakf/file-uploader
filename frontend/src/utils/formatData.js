@@ -13,7 +13,7 @@ export const formatDate = (dateString) => {
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 }
 
-export const formatFileSize = (bytes) => {
+export const formatSize = (bytes) => {
     if (!bytes) return '0 B'
 
     const size = typeof bytes === 'string' ? parseInt(bytes, 10) : bytes
