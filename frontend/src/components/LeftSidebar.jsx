@@ -95,7 +95,7 @@ export default function LeftSidebar(){
     }
     
     return (
-        <aside className='hidden md:flex flex-col w-64 border-r border-border h-full bg-surface/30 pt-6'>
+        <aside className='overflow-x-hidden hidden md:flex flex-col w-64 border-r border-border h-full bg-surface/30 pt-6'>
             {/* Header */}
             <Link to={'/'} className="px-5 mb-8 flex items-center justify-between group cursor-pointer">
                 <div className="flex items-center gap-2.5 text-zinc-100 font-semibold tracking-tight text-sm">
