@@ -3,7 +3,7 @@ import { useFetchAllFiles, useFiles, useFileStoreLoading } from "../../states/us
 import FileCard from './FileCard'
 import { useEffect, useState } from "react"
 
-export default function FileGrid({ limit, viewAll = false, customFiles = null, title = null, showCount = false }) {
+export default function FileGrid({ limit, viewAll = false, customFiles = null, title = null, showCount = false, onFileDelete }) {
     const [selectedFile, setSelectedFile] = useState(null)
     const storeFiles = useFiles()
     const loading = useFileStoreLoading()
@@ -27,7 +27,11 @@ export default function FileGrid({ limit, viewAll = false, customFiles = null, t
     }
 
     const handleFileUpdate = async () => {
-        await fetchAllFiles(true)
+        if (onFileDelete){
+            await onFileDelete()
+        } else {
+            await fetchAllFiles(true)
+        }
     }
 
     const handleFileClick = (file) => {

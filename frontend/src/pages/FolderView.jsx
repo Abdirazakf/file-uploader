@@ -1,14 +1,14 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router'
 import { useFetchFolderById, useCurrentFolder, useFolderStoreLoading, useCreateFolder } from '../states/useFolderStore'
 import LeftSideBar from '../components/LeftSidebar'
 import FolderCard from '../components/dashboard/FolderCard'
-import FileCard from '../components/dashboard/FileCard'
 import MainHeader from '../components/MainHeader'
 import { formatDate, formatPath } from '../utils/formatData.js'
 import { Plus, Folder, FolderPlus, File } from 'lucide-react'
 import { ThreeDot } from 'react-loading-indicators'
 import FileGrid from '../components/dashboard/FileGrid.jsx'
+import { useUploadMultipleFiles } from '../states/useFileStore.js'
 
 export default function FolderView(){
     const { folderId } = useParams()
@@ -16,10 +16,13 @@ export default function FolderView(){
     const currentFolder = useCurrentFolder()
     const loading = useFolderStoreLoading()
     const createFolder = useCreateFolder()
+    const uploadFiles = useUploadMultipleFiles()
 
+    const [selectedFile, setSelectedFile] = useState(null)
     const [showNewInput, setShowNewInput] = useState(false)
     const [newFolderName, setNewFolderName] = useState('')
     const [creating, setCreating] = useState(false)
+    const fileInputRef = useRef(null)
 
     useEffect(() => {
         if (folderId){
@@ -27,9 +30,22 @@ export default function FolderView(){
         }
     }, [folderId, fetchFolderById])
 
-    const handleUpload = (event) => {
-        event.preventDefault()
-        console.log('Uploaded file to folder:', folderId)
+    const handleUpload = () => {
+        fileInputRef.current?.click()
+    }
+
+    const handleFileSelect = async (e) => {
+        const selectedFile = Array.from(e.target.files || [])
+        
+        if (selectedFile.length > 0) {
+            await uploadFiles(selectedFile, folderId)
+
+            await fetchFolderById(folderId)
+            
+            if (fileInputRef.current) {
+                fileInputRef.current.value = ''
+            }
+        }
     }
 
     const handleCreateFolder = async (event) => {
@@ -53,12 +69,29 @@ export default function FolderView(){
     const handleFolderUpdate = async () => {
         await fetchFolderById(folderId)
     }
+
+    const handleFileClick = (file) => {
+        setSelectedFile(file)
+    }
+
+    const handleCloseSidebar = () => {
+        setSelectedFile(null)
+    }
     
     const breadcrumbs = formatPath(currentFolder)
 
     return (
         <div className="flex h-screen w-screen overflow-hidden bg-background">
             <LeftSideBar />
+
+            {/* Hidden file input */}
+            <input
+                ref={fileInputRef}
+                type="file"
+                multiple
+                onChange={handleFileSelect}
+                className="hidden"
+            />
 
             <main className="flex-1 flex flex-col h-full bg-background relative overflow-hidden">
                 <MainHeader
@@ -190,7 +223,7 @@ export default function FolderView(){
                             </h3>
                             
                             {currentFolder.files && currentFolder.files.length > 0 ? (
-                                <FileGrid viewAll customFiles={currentFolder.files} />
+                                <FileGrid viewAll customFiles={currentFolder.files} onFileDelete={handleFolderUpdate} />
                             ) : (
                                 <div className="flex flex-col items-center justify-center py-12 text-center border border-dashed border-zinc-800 rounded-lg">
                                     <div className="w-16 h-16 bg-zinc-900 rounded-full flex items-center justify-center mb-4 border border-zinc-800">
