@@ -32,11 +32,11 @@ export default function Dashboard(){
     }
 
     return (
-        <div className="flex h-screen w-screen overflow-hidden bg-background">
+        <div className="fixed inset-0 flex bg-background md:static md:h-screen">
             <LeftSidebar />
 
             {/* Main content area */}
-            <main className="flex-1 flex flex-col h-full bg-background relative overflow-hidden">
+            <div className="flex-1 flex flex-col w-full md:w-auto">
                 <MainHeader
                     breadcrumbs={[
                         { name: 'Home', path: '/' }
@@ -45,16 +45,16 @@ export default function Dashboard(){
                     onViewModeChange={setViewMode}
                 />
 
-                <div className="flex-1 overflow-y-auto p-6 relative">
-                    <div className="absolute inset-0 bg-grid opacity-[0.03] pointer-events-none"/>
+                <div className="flex-1 overflow-y-auto p-6 pb-20 md:pb-6">
+                    <div className="relative">
+                        <FileUpload onUpload={handleFileDrop}/>
 
-                    <FileUpload onUpload={handleFileDrop}/>
+                        <FolderGrid viewMode={viewMode} viewAll/>
 
-                    <FolderGrid viewMode={viewMode} viewAll/>
-
-                    <FileGrid limit={6} viewAll onFileClick={handleFileClick}/>
+                        <FileGrid limit={6} viewAll onFileClick={handleFileClick}/>
+                    </div>
                 </div>
-            </main>
+            </div>
 
             {selectedFile && (
                 <RightSidebar file={selectedFile} onClose={handleCloseSidebar} onFileUpdate={handleFileUpdate} />
