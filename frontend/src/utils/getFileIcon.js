@@ -30,3 +30,20 @@ export const getFileIcon = (mimeType, fileName) => {
     // Last resort
     return { icon: File, color: 'text-zinc-400' }
 }
+
+export const getFileType = (mimeType, fileName) => {
+    if (mimeType) {
+        if (mimeType.startsWith('image/')) return 'Image'
+        if (mimeType.startsWith('video/')) return 'Video'
+        if (mimeType.startsWith('audio/')) return 'Audio'
+        if (mimeType === 'application/pdf') return 'PDF Document'
+        if (mimeType.startsWith('text/')) return 'Text Document'
+        if (mimeType.includes('zip') || mimeType.includes('rar') || mimeType.includes('tar')) {
+            return 'Archive'
+        }
+    }
+
+    // Fallback to file extensions
+    const ext = fileName?.split('.').pop()?.toUpperCase()
+    return ext ? `${ext} File` : 'File'
+}
