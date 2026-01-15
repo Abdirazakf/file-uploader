@@ -14,14 +14,17 @@ export const formatDate = (dateString) => {
 }
 
 export const formatSize = (bytes) => {
-    if (!bytes) return '0 B'
-
+    if (!bytes || bytes === '0') return '0 B'
+    
     const size = typeof bytes === 'string' ? parseInt(bytes, 10) : bytes
-
+    const sizes = ['B', 'KB', 'MB', 'GB', 'TB']
+    
     if (size === 0) return '0 B'
-    if (size < 1024) return `${size} B`
-    if (size < 1024 * 1024) return `${(size / 1024).toFixed(1)} KB`
-    if (size < 1024 * 1024 * 1024) return `${(size / (1024 * 1024)).toFixed(1)} MB`
+    
+    const i = Math.floor(Math.log(size) / Math.log(1024))
+    const formattedSize = (size / Math.pow(1024, i)).toFixed(i === 0 ? 0 : 1)
+    
+    return `${formattedSize} ${sizes[i]}`
 }
 
 export const formatPath = (currentFolder) => {
